@@ -7,7 +7,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Search, Mic, ChevronDown, Menu, X, Volume2 } from "lucide-react";
-import { searchWords, speakText, type DongWord } from "@/lib/dongData";
+import { searchWords, speakText, speakDong, type DongWord } from "@/lib/dongData";
 
 const navItems = [
   { label: "首页", path: "/" },
@@ -125,13 +125,22 @@ export default function Navbar() {
                         </div>
                         <p className="text-xs text-dong-light mt-0.5">{word.dongPinyin}</p>
                       </div>
-                      <button
-                        onClick={() => speakText(word.chinese)}
-                        className="text-dong-light hover:text-dong-indigo p-1 transition-colors"
-                        title="播放发音"
-                      >
-                        <Volume2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => speakDong(word.dong, word.dongPinyin)}
+                          className="text-dong-rose hover:text-dong-indigo p-1 transition-colors text-[10px] flex items-center gap-0.5"
+                          title="侗语发音"
+                        >
+                          <Volume2 className="w-3.5 h-3.5" />侗
+                        </button>
+                        <button
+                          onClick={() => speakText(word.chinese)}
+                          className="text-dong-light hover:text-dong-indigo p-1 transition-colors text-[10px] flex items-center gap-0.5"
+                          title="普通话发音"
+                        >
+                          <Volume2 className="w-3.5 h-3.5" />普
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

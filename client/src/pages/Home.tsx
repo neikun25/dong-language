@@ -10,7 +10,7 @@ import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { dongDictionary, dongLessons, getProgress, speakText, searchWords, type DongWord } from "@/lib/dongData";
+import { dongDictionary, dongLessons, getProgress, speakText, speakDong, speakDongByChinese, searchWords, type DongWord } from "@/lib/dongData";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
@@ -149,13 +149,22 @@ export default function Home() {
                             <p className="text-xs text-foreground/60 mt-1.5">例: {word.example}</p>
                           )}
                         </div>
-                        <button
-                          onClick={() => speakText(word.chinese)}
-                          className="text-dong-light hover:text-dong-indigo transition-colors p-1 ml-2"
-                          title="播放发音"
-                        >
-                          <Volume2 className="w-5 h-5" />
-                        </button>
+                        <div className="flex flex-col gap-1 ml-2">
+                          <button
+                            onClick={() => { speakDong(word.dong, word.dongPinyin); toast.success("正在播放侗语发音"); }}
+                            className="flex items-center gap-1 text-dong-rose hover:text-dong-indigo transition-colors px-2 py-1 rounded-md bg-dong-rose/5 hover:bg-dong-rose/10 text-xs"
+                            title="播放侗语发音"
+                          >
+                            <Volume2 className="w-3.5 h-3.5" /> 侗语
+                          </button>
+                          <button
+                            onClick={() => { speakText(word.chinese); toast.success("正在播放普通话发音"); }}
+                            className="flex items-center gap-1 text-dong-indigo/60 hover:text-dong-indigo transition-colors px-2 py-1 rounded-md bg-dong-indigo/5 hover:bg-dong-indigo/10 text-xs"
+                            title="播放普通话发音"
+                          >
+                            <Volume2 className="w-3.5 h-3.5" /> 普通话
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

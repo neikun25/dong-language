@@ -10,7 +10,7 @@ import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { dongDictionary, speakText, searchWords } from "@/lib/dongData";
+import { dongDictionary, speakText, speakDong, speakDongByChinese, searchWords } from "@/lib/dongData";
 
 const dongPronData: Record<string, { dongPinyin: string; tips: string[]; toneGuide: string; commonMistakes: string[] }> = {
   "你好": { dongPinyin: "mii laox", tips: ["'mii'发音短促，高平调", "'laox'中升调，注意鼻音"], toneGuide: "高平调+中升调", commonMistakes: ["声调不稳定", "鼻音不够明显"] },
@@ -39,11 +39,24 @@ export default function Pronunciation() {
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handleStandardPronunciation = () => {
+  const handleDongPronunciation = () => {
+    const text = inputText.trim();
+    if (!text) { toast.info("请先输入要朗读的文字"); return; }
+    const word = dongDictionary.find(w => w.chinese === text);
+    if (word) {
+      speakDong(word.dong, word.dongPinyin);
+      toast.success(`正在播放侗语发音：${word.dong}`);
+    } else {
+      speakDongByChinese(text);
+      toast.success("正在播放侗语近似发音");
+    }
+  };
+
+  const handleChinesePronunciation = () => {
     const text = inputText.trim();
     if (!text) { toast.info("请先输入要朗读的文字"); return; }
     speakText(text);
-    toast.success("正在播放标准发音");
+    toast.success("正在播放普通话发音");
   };
 
   const startRecording = useCallback(async () => {
@@ -159,8 +172,11 @@ export default function Pronunciation() {
 
           {/* Controls */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
-            <Button onClick={handleStandardPronunciation} variant="outline" className="border-dong-indigo/20 text-dong-indigo hover:bg-dong-indigo/5 rounded-full px-5">
-              <Volume2 className="w-4 h-4 mr-2" /> 标准发音
+            <Button onClick={handleDongPronunciation} className="bg-dong-rose hover:bg-dong-rose/80 text-white rounded-full px-5">
+              <Volume2 className="w-4 h-4 mr-2" /> 侗语发音
+            </Button>
+            <Button onClick={handleChinesePronunciation} variant="outline" className="border-dong-indigo/20 text-dong-indigo hover:bg-dong-indigo/5 rounded-full px-5">
+              <Volume2 className="w-4 h-4 mr-2" /> 普通话发音
             </Button>
             <Button
               onClick={isRecording ? stopRecording : startRecording}

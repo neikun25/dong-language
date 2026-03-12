@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import {
   dongDictionary, dongLessons, categories,
   getProgress, saveProgress, markWordLearned, markLessonComplete, toggleFavorite, saveQuizScore,
-  speakText, getWordsByCategory, getDifficultyLabel, getDifficultyColor,
+  speakText, speakDong, getWordsByCategory, getDifficultyLabel, getDifficultyColor,
   type DongWord, type LearningProgress,
 } from "@/lib/dongData";
 
@@ -206,8 +206,11 @@ export default function DongLearn() {
                           )}
                         </div>
                         <div className="flex items-center gap-1 ml-2">
-                          <button onClick={() => speakText(word.chinese)} className="p-1.5 text-dong-light hover:text-dong-indigo transition-colors" title="播放发音">
-                            <Volume2 className="w-4 h-4" />
+                          <button onClick={() => speakDong(word.dong, word.dongPinyin)} className="p-1 text-dong-rose hover:text-dong-indigo transition-colors flex items-center gap-0.5 text-[10px]" title="侗语发音">
+                            <Volume2 className="w-3.5 h-3.5" />侗
+                          </button>
+                          <button onClick={() => speakText(word.chinese)} className="p-1 text-dong-light hover:text-dong-indigo transition-colors flex items-center gap-0.5 text-[10px]" title="普通话发音">
+                            <Volume2 className="w-3.5 h-3.5" />普
                           </button>
                           <button onClick={() => handleToggleFavorite(word.id)} className={`p-1.5 transition-colors ${isFav ? "text-dong-rose" : "text-dong-light hover:text-dong-rose"}`} title="收藏">
                             <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
@@ -259,7 +262,8 @@ export default function DongLearn() {
                         <p className="text-xs text-dong-light mt-0.5">{word.dongPinyin} | {word.mandarinPinyin}</p>
                       </div>
                       <div className="flex items-center gap-1">
-                        <button onClick={() => speakText(word.chinese)} className="p-1 text-dong-light hover:text-dong-indigo"><Volume2 className="w-4 h-4" /></button>
+                        <button onClick={() => speakDong(word.dong, word.dongPinyin)} className="p-1 text-dong-rose hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="侗语"><Volume2 className="w-3.5 h-3.5" />侗</button>
+                        <button onClick={() => speakText(word.chinese)} className="p-1 text-dong-light hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="普通话"><Volume2 className="w-3.5 h-3.5" />普</button>
                         <button onClick={() => handleToggleFavorite(word.id)} className={`p-1 ${isFav ? "text-dong-rose" : "text-dong-light hover:text-dong-rose"}`}>
                           <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
                         </button>
@@ -312,9 +316,14 @@ export default function DongLearn() {
                             例: {filteredWords[flashcardIndex].example}
                           </p>
                         )}
-                        <button onClick={(e) => { e.stopPropagation(); speakText(filteredWords[flashcardIndex].chinese); }} className="mt-3 text-dong-light hover:text-dong-indigo">
-                          <Volume2 className="w-5 h-5" />
-                        </button>
+                        <div className="flex items-center gap-3 mt-3">
+                          <button onClick={(e) => { e.stopPropagation(); speakDong(filteredWords[flashcardIndex].dong, filteredWords[flashcardIndex].dongPinyin); }} className="text-dong-rose hover:text-dong-indigo flex items-center gap-1 text-xs">
+                            <Volume2 className="w-4 h-4" /> 侗语发音
+                          </button>
+                          <button onClick={(e) => { e.stopPropagation(); speakText(filteredWords[flashcardIndex].chinese); }} className="text-dong-light hover:text-dong-indigo flex items-center gap-1 text-xs">
+                            <Volume2 className="w-4 h-4" /> 普通话
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>

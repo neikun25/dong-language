@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
   dongDictionary, dongLessons,
-  getProgress, toggleFavorite, speakText,
+  getProgress, toggleFavorite, speakText, speakDong,
   type LearningProgress,
 } from "@/lib/dongData";
 
@@ -207,7 +207,8 @@ export default function Profile() {
                         <p className="text-xs text-dong-light mt-0.5">{word.dongPinyin} | {word.mandarinPinyin}</p>
                       </div>
                       <div className="flex items-center gap-1">
-                        <button onClick={() => speakText(word.chinese)} className="p-1.5 text-dong-light hover:text-dong-indigo"><Volume2 className="w-4 h-4" /></button>
+                        <button onClick={() => speakDong(word.dong, word.dongPinyin)} className="p-1 text-dong-rose hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="侗语"><Volume2 className="w-3.5 h-3.5" />侗</button>
+                        <button onClick={() => speakText(word.chinese)} className="p-1 text-dong-light hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="普通话"><Volume2 className="w-3.5 h-3.5" />普</button>
                         <button onClick={() => handleRemoveFavorite(word.id)} className="p-1.5 text-dong-light hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </div>

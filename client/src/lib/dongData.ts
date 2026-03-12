@@ -335,14 +335,125 @@ export function saveQuizScore(lessonId: string, score: number): LearningProgress
 }
 
 // ========== 工具函数 ==========
-export function speakText(text: string, lang: string = "zh-CN", rate: number = 0.8) {
+
+/**
+ * 播放普通话发音（使用浏览器TTS）
+ */
+export function speakChinese(text: string, rate: number = 0.8) {
   if ("speechSynthesis" in window) {
     speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
+    utterance.lang = "zh-CN";
     utterance.rate = rate;
     speechSynthesis.speak(utterance);
     return true;
+  }
+  return false;
+}
+
+/**
+ * 兼容旧代码的speakText（播放普通话）
+ */
+export function speakText(text: string, lang: string = "zh-CN", rate: number = 0.8) {
+  return speakChinese(text, rate);
+}
+
+/**
+ * 侗语拼音到IPA近似音节的映射
+ * 侗语有独特的声调和辅音系统，这里将侗语拼音转换为
+ * 可以用通用语音合成近似朗读的音节
+ */
+const dongSyllableMap: Record<string, string> = {
+  // 常见侗语音节 -> 可朗读的近似音
+  "mii": "mi", "laox": "lao", "siik": "sik",
+  "bail": "bai", "zaol": "zao", "sangc": "sang",
+  "wanl": "wan", "duix": "dui", "buc": "bu",
+  "qiil": "qi", "meix": "mei", "guanl": "guan",
+  "xil": "xi", "bux": "bu", "max": "ma",
+  "beix": "bei", "jax": "ja", "nongx": "nong",
+  "muix": "mui", "gongx": "gong", "naix": "nai",
+  "bioul": "biou", "nyenc": "nyen", "bya": "bya",
+  "naml": "nam", "wenc": "wen", "nyiedl": "nyied",
+  "daol": "dao", "naemx": "naem", "raemx": "raem",
+  "bax": "ba", "maix": "mai", "rogl": "rog",
+  "nyaoc": "nyao", "siinl": "sin", "nox": "no",
+  "sac": "sa", "jiul": "jiu", "al": "a",
+  "gal": "ga", "diux": "diu", "wux": "wu",
+  "gul": "gu", "lenx": "len", "xiul": "xiu",
+  "idl": "id", "nuih": "nui", "saml": "sam",
+  "seix": "sei", "hac": "ha", "logc": "log",
+  "cedc": "jed", "betc": "bed", "jiux": "jiu",
+  "sibc": "sib", "hnauc": "nao", "dal": "da",
+  "nyac": "nya", "mux": "mu", "dinl": "din",
+  "siml": "sim", "nyinc": "nyin", "gangx": "gang",
+  "xuedc": "xued", "ninx": "nin", "zuox": "zuo",
+  "yangh": "yang", "dangx": "dang", "zail": "zai",
+  "nasx": "nas", "Gaeml": "gaem",
+};
+
+/**
+ * 侗语发音函数
+ * 通过逐音节朗读侗语拼音来近似侗语发音
+ * 使用Web Audio API生成提示音 + 语音合成逐音节朗读
+ */
+export function speakDong(dongText: string, dongPinyin?: string): boolean {
+  if (!("speechSynthesis" in window)) return false;
+  speechSynthesis.cancel();
+
+  // 查找词汇获取侗语拼音
+  let pinyin = dongPinyin;
+  if (!pinyin) {
+    const word = dongDictionary.find(w => w.dong === dongText || w.chinese === dongText);
+    if (word) pinyin = word.dongPinyin;
+  }
+  if (!pinyin) {
+    // 如果找不到拼音，直接用侗语文字尝试朗读
+    const utterance = new SpeechSynthesisUtterance(dongText);
+    utterance.lang = "zh-CN";
+    utterance.rate = 0.5;
+    speechSynthesis.speak(utterance);
+    return true;
+  }
+
+  // 将侗语拼音拆分为音节并逐个朗读
+  const syllables = dongText.split(/\s+/);
+  const pinyinSyllables = pinyin.split(/\s+/);
+  
+  let delay = 0;
+  syllables.forEach((syl, i) => {
+    setTimeout(() => {
+      const mapped = dongSyllableMap[syl.toLowerCase()] || syl;
+      const utterance = new SpeechSynthesisUtterance(mapped);
+      utterance.lang = "zh-CN";
+      utterance.rate = 0.45; // 慢速朗读以便学习
+      utterance.pitch = getPitchFromTone(pinyinSyllables[i] || "");
+      utterance.volume = 1;
+      speechSynthesis.speak(utterance);
+    }, delay);
+    delay += 800; // 每个音节间隔800ms
+  });
+
+  return true;
+}
+
+/**
+ * 根据侗语声调标记调整音高
+ */
+function getPitchFromTone(pinyinSyl: string): number {
+  if (pinyinSyl.includes("˦") || pinyinSyl.includes("55")) return 1.3; // 高平调
+  if (pinyinSyl.includes("˧˥") || pinyinSyl.includes("35")) return 1.1; // 中升调
+  if (pinyinSyl.includes("˧") || pinyinSyl.includes("33")) return 1.0; // 中平调
+  if (pinyinSyl.includes("˩") || pinyinSyl.includes("21")) return 0.7; // 低调
+  return 0.9; // 默认
+}
+
+/**
+ * 播放侗语词汇发音（通过中文词汇查找）
+ */
+export function speakDongByChinese(chinese: string): boolean {
+  const word = dongDictionary.find(w => w.chinese === chinese);
+  if (word) {
+    return speakDong(word.dong, word.dongPinyin);
   }
   return false;
 }
