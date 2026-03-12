@@ -11,6 +11,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { dongDictionary, speakText, speakDong, speakDongByChinese, searchWords } from "@/lib/dongData";
+import ToneCurve, { ToneBadge } from "@/components/ToneCurve";
+import MouthShape from "@/components/MouthShape";
 
 const dongPronData: Record<string, { dongPinyin: string; tips: string[]; toneGuide: string; commonMistakes: string[] }> = {
   "你好": { dongPinyin: "mii laox", tips: ["'mii'发音短促，高平调", "'laox'中升调，注意鼻音"], toneGuide: "高平调+中升调", commonMistakes: ["声调不稳定", "鼻音不够明显"] },
@@ -159,14 +161,31 @@ export default function Pronunciation() {
             />
           </div>
 
-          {/* Dong Pinyin Display */}
+          {/* Dong Pinyin Display with Tone Curve & Mouth Shape */}
           {currentDongPinyin && (
-            <div className="text-center mb-6 bg-dong-cream/40 rounded-lg py-3 border border-dong-indigo/10">
-              <span className="text-xs text-dong-light">侗语音标: </span>
-              <span className="text-dong-rose font-medium text-lg">{currentDongPinyin}</span>
-              {feedback?.toneGuide && (
-                <span className="text-xs text-dong-light ml-3">声调: {feedback.toneGuide}</span>
-              )}
+            <div className="mb-6 bg-dong-cream/40 rounded-xl border border-dong-indigo/10 overflow-hidden">
+              <div className="text-center py-3 border-b border-dong-indigo/5">
+                <span className="text-xs text-dong-light">侗语音标: </span>
+                <span className="text-dong-rose font-medium text-lg">{currentDongPinyin}</span>
+                {feedback?.toneGuide && (
+                  <span className="text-xs text-dong-light ml-3">声调: {feedback.toneGuide}</span>
+                )}
+              </div>
+              <div className="flex items-center justify-center gap-6 py-4 px-4">
+                {/* 声调曲线 */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] text-dong-light mb-1 font-medium">声调曲线</span>
+                  <ToneCurve dongPinyin={currentDongPinyin} size="lg" animated />
+                </div>
+                {/* 口型动画 */}
+                <div className="flex flex-col items-center">
+                  <span className="text-[10px] text-dong-light mb-1 font-medium">点击播放口型</span>
+                  <MouthShape dongPinyin={currentDongPinyin} dong={inputText} size="lg" />
+                </div>
+              </div>
+              <div className="px-4 pb-3 flex justify-center">
+                <ToneBadge dongPinyin={currentDongPinyin} />
+              </div>
             </div>
           )}
 

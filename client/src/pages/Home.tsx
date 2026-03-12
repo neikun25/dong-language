@@ -11,12 +11,15 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { dongDictionary, dongLessons, getProgress, speakText, speakDong, speakDongByChinese, searchWords, type DongWord } from "@/lib/dongData";
+import PronunciationDetail, { InlinePronunciationGuide } from "@/components/PronunciationDetail";
+import { ToneBadge } from "@/components/ToneCurve";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [results, setResults] = useState<DongWord[]>([]);
   const [searched, setSearched] = useState(false);
   const [progress, setProgress] = useState(getProgress());
+  const [detailWord, setDetailWord] = useState<DongWord | null>(null);
 
   useEffect(() => {
     setProgress(getProgress());
@@ -145,6 +148,7 @@ export default function Home() {
                             <span>侗语音标: <span className="text-dong-indigo">{word.dongPinyin}</span></span>
                             <span>普通话拼音: <span className="text-dong-indigo">{word.mandarinPinyin}</span></span>
                           </div>
+                          <ToneBadge dongPinyin={word.dongPinyin} className="mt-1.5" />
                           {word.example && (
                             <p className="text-xs text-foreground/60 mt-1.5">例: {word.example}</p>
                           )}
@@ -163,6 +167,13 @@ export default function Home() {
                             title="播放普通话发音"
                           >
                             <Volume2 className="w-3.5 h-3.5" /> 普通话
+                          </button>
+                          <button
+                            onClick={() => setDetailWord(word)}
+                            className="flex items-center gap-1 text-amber-600 hover:text-amber-700 transition-colors px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-xs"
+                            title="查看发音详情"
+                          >
+                            口型/声调
                           </button>
                         </div>
                       </div>
@@ -312,6 +323,7 @@ export default function Home() {
       </section>
 
       <Footer />
+      {detailWord && <PronunciationDetail word={detailWord} onClose={() => setDetailWord(null)} />}
     </div>
   );
 }

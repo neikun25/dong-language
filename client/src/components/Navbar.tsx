@@ -8,6 +8,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Search, Mic, ChevronDown, Menu, X, Volume2 } from "lucide-react";
 import { searchWords, speakText, speakDong, type DongWord } from "@/lib/dongData";
+import { ToneBadge } from "@/components/ToneCurve";
 
 const navItems = [
   { label: "首页", path: "/" },
@@ -124,6 +125,7 @@ export default function Navbar() {
                           <span className="text-dong-rose text-xs">{word.dong}</span>
                         </div>
                         <p className="text-xs text-dong-light mt-0.5">{word.dongPinyin}</p>
+                        <ToneBadge dongPinyin={word.dongPinyin} className="mt-0.5" />
                       </div>
                       <div className="flex items-center gap-1">
                         <button

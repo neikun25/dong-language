@@ -15,6 +15,9 @@ import {
   speakText, speakDong, getWordsByCategory, getDifficultyLabel, getDifficultyColor,
   type DongWord, type LearningProgress,
 } from "@/lib/dongData";
+import PronunciationDetail from "@/components/PronunciationDetail";
+import { ToneBadge } from "@/components/ToneCurve";
+import { MouthTip } from "@/components/MouthShape";
 
 type ViewMode = "courses" | "dictionary" | "flashcard" | "quiz";
 
@@ -25,6 +28,7 @@ export default function DongLearn() {
   const [progress, setProgress] = useState<LearningProgress>(getProgress());
   const [flashcardIndex, setFlashcardIndex] = useState(0);
   const [flashcardFlipped, setFlashcardFlipped] = useState(false);
+  const [detailWord, setDetailWord] = useState<DongWord | null>(null);
   const [quizWords, setQuizWords] = useState<DongWord[]>([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizScore, setQuizScore] = useState(0);
@@ -199,6 +203,10 @@ export default function DongLearn() {
                             <span>侗语音标: <span className="text-dong-indigo">{word.dongPinyin}</span></span>
                             <span>普通话拼音: <span className="text-dong-indigo">{word.mandarinPinyin}</span></span>
                           </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <ToneBadge dongPinyin={word.dongPinyin} />
+                            <button onClick={() => setDetailWord(word)} className="text-[10px] text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded transition-colors">口型/声调</button>
+                          </div>
                           {word.example && (
                             <p className="text-xs text-foreground/60 mt-1.5 bg-dong-cream/40 px-3 py-1.5 rounded-md inline-block">
                               例: {word.example} {word.exampleDong && <span className="text-dong-rose">({word.exampleDong})</span>}
@@ -260,10 +268,12 @@ export default function DongLearn() {
                           <span className="text-dong-rose text-sm">{word.dong}</span>
                         </div>
                         <p className="text-xs text-dong-light mt-0.5">{word.dongPinyin} | {word.mandarinPinyin}</p>
+                        <ToneBadge dongPinyin={word.dongPinyin} className="mt-0.5" />
                       </div>
                       <div className="flex items-center gap-1">
                         <button onClick={() => speakDong(word.dong, word.dongPinyin)} className="p-1 text-dong-rose hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="侗语"><Volume2 className="w-3.5 h-3.5" />侗</button>
                         <button onClick={() => speakText(word.chinese)} className="p-1 text-dong-light hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="普通话"><Volume2 className="w-3.5 h-3.5" />普</button>
+                        <button onClick={() => setDetailWord(word)} className="p-1 text-amber-600 hover:text-amber-700 text-[10px] bg-amber-50 rounded" title="发音详情">口型</button>
                         <button onClick={() => handleToggleFavorite(word.id)} className={`p-1 ${isFav ? "text-dong-rose" : "text-dong-light hover:text-dong-rose"}`}>
                           <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
                         </button>
@@ -418,6 +428,7 @@ export default function DongLearn() {
       </section>
 
       <Footer />
+      {detailWord && <PronunciationDetail word={detailWord} onClose={() => setDetailWord(null)} />}
     </div>
   );
 }

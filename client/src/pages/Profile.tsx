@@ -12,10 +12,14 @@ import { toast } from "sonner";
 import {
   dongDictionary, dongLessons,
   getProgress, toggleFavorite, speakText, speakDong,
-  type LearningProgress,
+  type LearningProgress, type DongWord,
 } from "@/lib/dongData";
+import PronunciationDetail from "@/components/PronunciationDetail";
+import { ToneBadge } from "@/components/ToneCurve";
 
 type Tab = "overview" | "favorites" | "history" | "achievements";
+
+// detailWord state is declared inside the component below
 
 const achievements = [
   { id: "first_word", title: "初识侗语", desc: "学习第一个侗语词汇", icon: BookOpen, condition: (p: LearningProgress) => p.learnedWords.length >= 1 },
@@ -31,6 +35,7 @@ const achievements = [
 export default function Profile() {
   const [tab, setTab] = useState<Tab>("overview");
   const [progress, setProgress] = useState<LearningProgress>(getProgress());
+  const [detailWord, setDetailWord] = useState<DongWord | null>(null);
 
   useEffect(() => { setProgress(getProgress()); }, []);
 
@@ -205,10 +210,12 @@ export default function Profile() {
                           <span className="text-dong-rose text-sm">{word.dong}</span>
                         </div>
                         <p className="text-xs text-dong-light mt-0.5">{word.dongPinyin} | {word.mandarinPinyin}</p>
+                        <ToneBadge dongPinyin={word.dongPinyin} className="mt-0.5" />
                       </div>
                       <div className="flex items-center gap-1">
                         <button onClick={() => speakDong(word.dong, word.dongPinyin)} className="p-1 text-dong-rose hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="侗语"><Volume2 className="w-3.5 h-3.5" />侗</button>
                         <button onClick={() => speakText(word.chinese)} className="p-1 text-dong-light hover:text-dong-indigo text-[10px] flex items-center gap-0.5" title="普通话"><Volume2 className="w-3.5 h-3.5" />普</button>
+                        <button onClick={() => setDetailWord(word)} className="p-1 text-amber-600 hover:text-amber-700 text-[10px] bg-amber-50 rounded" title="发音详情">口型</button>
                         <button onClick={() => handleRemoveFavorite(word.id)} className="p-1.5 text-dong-light hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </div>
@@ -289,6 +296,7 @@ export default function Profile() {
       </section>
 
       <Footer />
+      {detailWord && <PronunciationDetail word={detailWord} onClose={() => setDetailWord(null)} />}
     </div>
   );
 }
