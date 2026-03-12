@@ -1,39 +1,26 @@
 /*
- * Design: 侗族语言应用主页
- * 忠实还原PSD设计稿: 轮播图 + 翻译区 + 发音问题 + 待办 + 学习记录
- * 色彩: dong-indigo主色, dong-paper背景, dong-rose强调
+ * Design: 侗族语言应用主页 - 文化传播与语言学习平台
+ * 轮播图 + 平台介绍 + 快速入口 + 翻译搜索 + 学习进度 + 热门课程
  */
-import { useState } from "react";
-import { Search, Volume2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link } from "wouter";
+import { Search, Volume2, BookOpen, Mic, MessageSquare, Globe, Star, TrendingUp, ChevronRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
-// 侗语词典数据
-const dongDictionary: Record<string, { dong: string; dongPinyin: string; mandarinPinyin: string }> = {
-  "你好": { dong: "mii laox", dongPinyin: "mi˧ lau˦", mandarinPinyin: "nǐ hǎo" },
-  "谢谢": { dong: "laox siik", dongPinyin: "lau˦ si:k˧", mandarinPinyin: "xiè xie" },
-  "吃饭": { dong: "nyaoc jax", dongPinyin: "ɲau˧ tɕa˦", mandarinPinyin: "chī fàn" },
-  "喝水": { dong: "nyaoc naml", dongPinyin: "ɲau˧ nam˩", mandarinPinyin: "hē shuǐ" },
-  "再见": { dong: "bail laox", dongPinyin: "pai˩ lau˦", mandarinPinyin: "zài jiàn" },
-  "朋友": { dong: "bioul nyenc", dongPinyin: "piou˩ ɲen˧", mandarinPinyin: "péng you" },
-  "唱歌": { dong: "al gal", dongPinyin: "a˩ ka˩", mandarinPinyin: "chàng gē" },
-  "跳舞": { dong: "diux wux", dongPinyin: "tiu˦ wu˦", mandarinPinyin: "tiào wǔ" },
-  "家": { dong: "yangh", dongPinyin: "jaŋ˧˥", mandarinPinyin: "jiā" },
-  "山": { dong: "bya", dongPinyin: "pja˩", mandarinPinyin: "shān" },
-  "水": { dong: "naml", dongPinyin: "nam˩", mandarinPinyin: "shuǐ" },
-  "太阳": { dong: "wenc nyiedl", dongPinyin: "wen˧ ɲiet˩", mandarinPinyin: "tài yáng" },
-  "月亮": { dong: "laox nyiedl", dongPinyin: "lau˦ ɲiet˩", mandarinPinyin: "yuè liang" },
-  "鼓楼": { dong: "gul laox", dongPinyin: "ku˩ lau˦", mandarinPinyin: "gǔ lóu" },
-  "大歌": { dong: "al laox", dongPinyin: "a˩ lau˦", mandarinPinyin: "dà gē" },
-};
+import { dongDictionary, dongLessons, getProgress, speakText, searchWords, type DongWord } from "@/lib/dongData";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
-  const [result, setResult] = useState<{ dong: string; dongPinyin: string; mandarinPinyin: string } | null>(null);
+  const [results, setResults] = useState<DongWord[]>([]);
   const [searched, setSearched] = useState(false);
+  const [progress, setProgress] = useState(getProgress());
+
+  useEffect(() => {
+    setProgress(getProgress());
+  }, []);
 
   const handleSearch = () => {
     const trimmed = searchText.trim();
@@ -41,45 +28,78 @@ export default function Home() {
       toast.info("请输入要查询的中文词汇");
       return;
     }
-    const found = dongDictionary[trimmed];
+    const found = searchWords(trimmed);
     setSearched(true);
-    if (found) {
-      setResult(found);
-    } else {
-      setResult(null);
-      toast.info("未找到该词汇的侗语翻译，请尝试其他词汇");
+    setResults(found);
+    if (found.length === 0) {
+      toast.info("未找到相关词汇，请尝试其他关键词");
     }
   };
 
-  const handleSpeak = (text: string) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 0.8;
-      speechSynthesis.speak(utterance);
-    } else {
-      toast.info("您的浏览器不支持语音合成");
-    }
-  };
+  const quickEntries = [
+    { icon: BookOpen, label: "侗语学习", desc: "系统学习侗语词汇", path: "/dong-learn", color: "bg-blue-50 text-blue-600 border-blue-100" },
+    { icon: Globe, label: "普通话学习", desc: "提升普通话水平", path: "/mandarin-learn", color: "bg-green-50 text-green-600 border-green-100" },
+    { icon: Mic, label: "发音纠音", desc: "AI评分纠正发音", path: "/pronunciation", color: "bg-purple-50 text-purple-600 border-purple-100" },
+    { icon: Star, label: "侗族文化", desc: "探索侗族文化瑰宝", path: "/culture", color: "bg-amber-50 text-amber-600 border-amber-100" },
+    { icon: MessageSquare, label: "留言交流", desc: "分享学习心得", path: "/message", color: "bg-rose-50 text-rose-600 border-rose-100" },
+    { icon: TrendingUp, label: "个人中心", desc: "查看学习进度", path: "/profile", color: "bg-teal-50 text-teal-600 border-teal-100" },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-dong-paper">
       <Navbar />
       <Carousel />
 
-      {/* Translation Section */}
+      {/* Platform Introduction */}
       <section className="py-12 px-4">
-        <div className="max-w-[1100px] mx-auto">
-          <h2 className="text-2xl font-serif text-dong-indigo font-bold mb-8 flex items-center gap-3">
-            普通话-侗语翻译
-            <span className="text-sm font-sans font-normal text-dong-light bg-dong-indigo/5 px-3 py-1 rounded-full">
-              搜索
-            </span>
+        <div className="max-w-[1100px] mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-serif text-dong-indigo font-bold mb-4">
+            侗族文化传播与语言学习平台
           </h2>
+          <p className="text-dong-light text-sm md:text-base max-w-[700px] mx-auto leading-relaxed mb-3">
+            致力于侗族语言文化的保护与传承，提供侗语学习、普通话提升、发音纠正等功能，
+            让更多人了解和学习侗族这一珍贵的民族文化遗产。
+          </p>
+          <div className="flex items-center justify-center gap-6 text-xs text-dong-light mt-4">
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-dong-rose" />{dongDictionary.length}+ 侗语词汇</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-dong-indigo" />{dongLessons.length} 节课程</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-dong-gold" />AI发音评分</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Entry Cards */}
+      <section className="pb-10 px-4">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+            {quickEntries.map((entry) => (
+              <Link key={entry.label} href={entry.path}>
+                <div className={`rounded-xl p-4 border transition-all hover:shadow-md hover:-translate-y-0.5 ${entry.color} h-full`}>
+                  <entry.icon className="w-7 h-7 mb-2" />
+                  <h3 className="font-bold text-sm mb-0.5">{entry.label}</h3>
+                  <p className="text-xs opacity-70">{entry.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Translation Section */}
+      <section className="py-10 px-4 bg-white/60">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-serif text-dong-indigo font-bold flex items-center gap-3">
+              普通话-侗语翻译
+              <span className="text-xs font-sans font-normal text-dong-light bg-dong-indigo/5 px-3 py-1 rounded-full">
+                支持中文/侗语/拼音搜索
+              </span>
+            </h2>
+          </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left: Dong intro image */}
-            <div className="lg:w-[300px] flex-shrink-0">
+            <div className="lg:w-[280px] flex-shrink-0">
               <div className="rounded-lg overflow-hidden shadow-md border border-dong-indigo/10">
                 <img
                   src="https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/dong-culture-hero-bXVLgdU2pfKceyYv2mwSed.webp"
@@ -87,12 +107,11 @@ export default function Home() {
                   className="w-full h-auto object-cover"
                 />
               </div>
-              <p className="text-sm text-dong-light mt-3 text-center">侗语介绍</p>
+              <p className="text-sm text-dong-light mt-3 text-center italic">侗族文化 · 语言之美</p>
             </div>
 
             {/* Right: Translation fields */}
             <div className="flex-1 space-y-4">
-              {/* Search input */}
               <div className="flex gap-3">
                 <div className="flex-1 relative">
                   <input
@@ -100,136 +119,184 @@ export default function Home() {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                    placeholder="输入中文词汇，如：你好、谢谢、鼓楼..."
+                    placeholder="输入中文、侗语或拼音搜索..."
                     className="w-full border-2 border-dong-indigo/20 rounded-lg px-4 py-3 text-base focus:outline-none focus:border-dong-indigo/50 transition-colors bg-white"
                   />
                 </div>
-                <Button
-                  onClick={handleSearch}
-                  className="bg-dong-indigo hover:bg-dong-deep text-white px-6"
-                >
+                <Button onClick={handleSearch} className="bg-dong-indigo hover:bg-dong-deep text-white px-6">
                   <Search className="w-4 h-4 mr-2" />
                   搜索
                 </Button>
               </div>
 
-              {/* Result fields */}
-              <div className="space-y-3">
-                {[
-                  { num: "壹", label: "普通话", value: searched ? searchText : "" },
-                  { num: "贰", label: "侗语", value: result?.dong || (searched ? "未收录" : "") },
-                  { num: "叁", label: "侗语音标", value: result?.dongPinyin || (searched ? "—" : "") },
-                  { num: "肆", label: "普通话音标", value: result?.mandarinPinyin || (searched ? "—" : "") },
-                ].map((field) => (
-                  <div key={field.num} className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-dong-indigo/10 border border-dong-indigo/20 rounded-md flex items-center justify-center text-dong-indigo font-serif text-lg font-bold flex-shrink-0">
-                      {field.num}
-                    </div>
-                    <div className="flex-1 flex items-center justify-between border-b-2 border-dong-indigo/15 pb-2">
-                      <span className="text-sm text-dong-light mr-4 flex-shrink-0">{field.label}</span>
-                      <div className="flex-1 flex items-center justify-between">
-                        <span className="text-dong-indigo font-medium">
-                          {field.value}
-                        </span>
-                        {field.value && field.value !== "未收录" && field.value !== "—" && (
-                          <button
-                            onClick={() => handleSpeak(field.num === "壹" ? searchText : field.value)}
-                            className="text-dong-light hover:text-dong-indigo transition-colors ml-2"
-                            title="播放发音"
-                          >
-                            <Volume2 className="w-4 h-4" />
-                          </button>
-                        )}
+              {/* Results */}
+              {searched && results.length > 0 && (
+                <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+                  {results.map((word) => (
+                    <div key={word.id} className="bg-white rounded-lg p-4 border border-dong-indigo/10 shadow-sm">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-1">
+                            <span className="text-lg font-bold text-dong-indigo">{word.chinese}</span>
+                            <span className="text-dong-rose font-medium">{word.dong}</span>
+                            <span className="text-xs bg-dong-cream px-2 py-0.5 rounded text-dong-light">{word.category}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dong-light">
+                            <span>侗语音标: <span className="text-dong-indigo">{word.dongPinyin}</span></span>
+                            <span>普通话拼音: <span className="text-dong-indigo">{word.mandarinPinyin}</span></span>
+                          </div>
+                          {word.example && (
+                            <p className="text-xs text-foreground/60 mt-1.5">例: {word.example}</p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => speakText(word.chinese)}
+                          className="text-dong-light hover:text-dong-indigo transition-colors p-1 ml-2"
+                          title="播放发音"
+                        >
+                          <Volume2 className="w-5 h-5" />
+                        </button>
                       </div>
                     </div>
+                  ))}
+                </div>
+              )}
+              {searched && results.length === 0 && (
+                <div className="bg-white rounded-lg p-6 border border-dong-indigo/10 text-center">
+                  <p className="text-dong-light text-sm">未找到相关词汇，试试其他关键词</p>
+                </div>
+              )}
+              {!searched && (
+                <div className="bg-dong-cream/40 rounded-lg p-5 border border-dong-indigo/10">
+                  <p className="text-sm text-dong-light mb-3">热门搜索：</p>
+                  <div className="flex flex-wrap gap-2">
+                    {["你好", "谢谢", "鼓楼", "大歌", "吃饭", "朋友", "唱歌", "山", "水"].map((w) => (
+                      <button
+                        key={w}
+                        onClick={() => { setSearchText(w); const found = searchWords(w); setSearched(true); setResults(found); }}
+                        className="px-3 py-1.5 bg-white rounded-full text-xs text-dong-indigo border border-dong-indigo/15 hover:bg-dong-indigo hover:text-white transition-colors"
+                      >
+                        {w}
+                      </button>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learning Progress Section */}
+      <section className="py-10 px-4">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-serif text-dong-indigo font-bold">学习概览</h2>
+            <Link href="/profile" className="text-sm text-dong-rose hover:text-dong-indigo flex items-center gap-1 transition-colors">
+              查看详情 <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
+              <p className="text-xs text-dong-light mb-1">已学词汇</p>
+              <p className="text-2xl font-bold text-dong-indigo">{progress.learnedWords.length}</p>
+              <div className="w-full bg-dong-cream rounded-full h-1.5 mt-2">
+                <div className="bg-dong-indigo h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, (progress.learnedWords.length / dongDictionary.length) * 100)}%` }} />
+              </div>
+              <p className="text-[10px] text-dong-light mt-1">共 {dongDictionary.length} 个词汇</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
+              <p className="text-xs text-dong-light mb-1">已完成课程</p>
+              <p className="text-2xl font-bold text-dong-rose">{progress.completedLessons.length}</p>
+              <div className="w-full bg-dong-cream rounded-full h-1.5 mt-2">
+                <div className="bg-dong-rose h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, (progress.completedLessons.length / dongLessons.length) * 100)}%` }} />
+              </div>
+              <p className="text-[10px] text-dong-light mt-1">共 {dongLessons.length} 节课程</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
+              <p className="text-xs text-dong-light mb-1">收藏词汇</p>
+              <p className="text-2xl font-bold text-dong-gold">{progress.favorites.length}</p>
+              <p className="text-[10px] text-dong-light mt-3">随时复习收藏的词汇</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
+              <p className="text-xs text-dong-light mb-1">连续学习</p>
+              <p className="text-2xl font-bold text-green-600">{progress.streak} <span className="text-sm font-normal">天</span></p>
+              <p className="text-[10px] text-dong-light mt-3">坚持每天学习</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Hot Courses */}
+      <section className="py-10 px-4 bg-white/60">
+        <div className="max-w-[1100px] mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-serif text-dong-indigo font-bold">推荐课程</h2>
+            <Link href="/dong-learn" className="text-sm text-dong-rose hover:text-dong-indigo flex items-center gap-1 transition-colors">
+              全部课程 <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {dongLessons.slice(0, 5).map((lesson) => {
+              const isCompleted = progress.completedLessons.includes(lesson.id);
+              return (
+                <Link key={lesson.id} href="/dong-learn">
+                  <div className="bg-white rounded-xl p-4 border border-dong-indigo/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                        lesson.difficulty === 1 ? "bg-green-50 text-green-600" :
+                        lesson.difficulty === 2 ? "bg-yellow-50 text-yellow-600" :
+                        "bg-red-50 text-red-600"
+                      }`}>
+                        {lesson.difficulty === 1 ? "初级" : lesson.difficulty === 2 ? "中级" : "高级"}
+                      </span>
+                      {isCompleted && <span className="text-[10px] text-green-600">已完成</span>}
+                    </div>
+                    <h3 className="font-bold text-dong-indigo text-sm mb-1">{lesson.title}</h3>
+                    <p className="text-xs text-dong-light line-clamp-2">{lesson.description}</p>
+                    <p className="text-[10px] text-dong-light mt-2">{lesson.wordIds.length} 个词汇</p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Pronunciation Issues Section */}
-      <section className="py-10 px-4 bg-white/60">
-        <div className="max-w-[1100px] mx-auto flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-[160px] flex-shrink-0">
-            <img
-              src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=400&fit=crop"
-              alt="发音问题"
-              className="w-full h-auto rounded-lg shadow-sm object-cover"
-            />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-serif text-dong-indigo font-bold mb-4">发音问题</h2>
-
-            <div className="mb-5">
-              <h3 className="text-dong-rose font-semibold text-sm mb-2">侗语发音问题</h3>
-              <ol className="text-sm text-foreground/80 space-y-1 list-decimal list-inside">
-                <li>声调不稳定，特别是高平调（55）和低升调（13）容易混淆</li>
-                <li>鼻音韵尾有时发不完整</li>
-                <li>清浊辅音区分不够明显</li>
-              </ol>
-            </div>
-
-            <div className="mb-5">
-              <h3 className="text-dong-rose font-semibold text-sm mb-2">普通话发音问题</h3>
-              <ol className="text-sm text-foreground/80 space-y-1 list-decimal list-inside">
-                <li>"n"和"l"发音有时混淆</li>
-                <li>第三声（214）降升不够明显</li>
-                <li>轻声有时发得过重</li>
-              </ol>
-            </div>
-
-            <div>
-              <h3 className="text-dong-rose font-semibold text-sm mb-2">我的待办</h3>
-              <ul className="text-sm text-foreground/80 space-y-1.5">
-                <li className="flex items-center gap-2">
-                  <span className="w-4 h-4 border border-dong-indigo/30 rounded-sm flex-shrink-0" />
-                  完成本周侗语发音练习
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-4 h-4 border border-dong-indigo/30 rounded-sm flex-shrink-0" />
-                  参加侗族文化线上讲座
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-4 h-4 border border-dong-indigo/30 rounded-sm flex-shrink-0" />
-                  提交普通话水平测试申请
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="lg:w-[240px] flex-shrink-0 self-end">
-            <img
-              src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop"
-              alt="侗族风光"
-              className="w-full h-auto rounded-lg shadow-sm object-cover"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Learning Records Section */}
       <section className="py-10 px-4">
         <div className="max-w-[1100px] mx-auto">
-          <h2 className="text-xl font-serif text-dong-indigo font-bold mb-6">学习记录</h2>
+          <h2 className="text-xl font-serif text-dong-indigo font-bold mb-6">常见发音问题</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg p-5 border border-dong-indigo/10 shadow-sm">
-              <h3 className="text-dong-rose font-semibold text-sm mb-3">侗语学习进度</h3>
-              <p className="text-sm text-foreground/70 mb-1">已学习侗语词汇：<span className="text-dong-indigo font-bold">128</span>个</p>
-              <div className="w-full bg-dong-cream rounded-full h-2 mt-2">
-                <div className="bg-dong-indigo h-2 rounded-full" style={{ width: "42%" }} />
-              </div>
-              <p className="text-xs text-dong-light mt-3">最近练习：2025-07-30 15:42</p>
+            <div className="bg-white rounded-xl p-6 border border-dong-indigo/10 shadow-sm">
+              <h3 className="text-dong-rose font-semibold text-sm mb-3 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-dong-rose/10 flex items-center justify-center text-dong-rose text-xs">侗</span>
+                侗语发音常见问题
+              </h3>
+              <ol className="text-sm text-foreground/80 space-y-2 list-decimal list-inside">
+                <li>声调不稳定，特别是高平调（55）和低升调（13）容易混淆</li>
+                <li>鼻音韵尾有时发不完整，如"-m"、"-n"、"-ng"</li>
+                <li>清浊辅音区分不够明显</li>
+                <li>入声字的喉塞尾容易丢失</li>
+              </ol>
+              <Link href="/pronunciation" className="inline-block mt-4 text-xs text-dong-rose hover:text-dong-indigo transition-colors">
+                前往侗语纠音练习 →
+              </Link>
             </div>
-            <div className="bg-white rounded-lg p-5 border border-dong-indigo/10 shadow-sm">
-              <h3 className="text-dong-rose font-semibold text-sm mb-3">普通话学习进度</h3>
-              <p className="text-sm text-foreground/70 mb-1">已练习普通话句子：<span className="text-dong-indigo font-bold">56</span>句</p>
-              <div className="w-full bg-dong-cream rounded-full h-2 mt-2">
-                <div className="bg-dong-rose h-2 rounded-full" style={{ width: "28%" }} />
-              </div>
-              <p className="text-xs text-dong-light mt-3">最近练习：2025-07-29 09:18</p>
+            <div className="bg-white rounded-xl p-6 border border-dong-indigo/10 shadow-sm">
+              <h3 className="text-dong-indigo font-semibold text-sm mb-3 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-dong-indigo/10 flex items-center justify-center text-dong-indigo text-xs">普</span>
+                普通话发音常见问题
+              </h3>
+              <ol className="text-sm text-foreground/80 space-y-2 list-decimal list-inside">
+                <li>"n"和"l"发音混淆（侗语母语者常见）</li>
+                <li>翘舌音（zh, ch, sh, r）发不到位</li>
+                <li>第三声（214）降升不够明显</li>
+                <li>前后鼻音（-n/-ng）区分困难</li>
+              </ol>
+              <Link href="/mandarin-pronunciation" className="inline-block mt-4 text-xs text-dong-indigo hover:text-dong-rose transition-colors">
+                前往普通话纠音练习 →
+              </Link>
             </div>
           </div>
         </div>
