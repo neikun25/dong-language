@@ -16,6 +16,7 @@ const navItems = [
   { label: "普通话纠音", path: "/mandarin-pronunciation" },
   { label: "普通话学习", path: "/mandarin-learn" },
   { label: "侗语学习", path: "/dong-learn" },
+  { label: "声调练习", path: "/tone-compare" },
   { label: "侗族文化", path: "/culture" },
 ];
 

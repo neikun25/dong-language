@@ -13,6 +13,7 @@ import Culture from "./pages/Culture";
 import DongLearn from "./pages/DongLearn";
 import MandarinLearn from "./pages/MandarinLearn";
 import Profile from "./pages/Profile";
+import ToneCompare from "./pages/ToneCompare";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/dong-learn" component={DongLearn} />
       <Route path="/mandarin-learn" component={MandarinLearn} />
       <Route path="/profile" component={Profile} />
+      <Route path="/tone-compare" component={ToneCompare} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

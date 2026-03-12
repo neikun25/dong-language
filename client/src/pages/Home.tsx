@@ -4,7 +4,7 @@
  */
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Search, Volume2, BookOpen, Mic, MessageSquare, Globe, Star, TrendingUp, ChevronRight } from "lucide-react";
+import { Search, Volume2, BookOpen, Mic, MessageSquare, Globe, Star, TrendingUp, ChevronRight, Music } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
@@ -43,6 +43,7 @@ export default function Home() {
     { icon: BookOpen, label: "侗语学习", desc: "系统学习侗语词汇", path: "/dong-learn", color: "bg-blue-50 text-blue-600 border-blue-100" },
     { icon: Globe, label: "普通话学习", desc: "提升普通话水平", path: "/mandarin-learn", color: "bg-green-50 text-green-600 border-green-100" },
     { icon: Mic, label: "发音纠音", desc: "AI评分纠正发音", path: "/pronunciation", color: "bg-purple-50 text-purple-600 border-purple-100" },
+    { icon: Music, label: "声调练习", desc: "对比学习侗语声调", path: "/tone-compare", color: "bg-indigo-50 text-indigo-600 border-indigo-100" },
     { icon: Star, label: "侗族文化", desc: "探索侗族文化瑰宝", path: "/culture", color: "bg-amber-50 text-amber-600 border-amber-100" },
     { icon: MessageSquare, label: "留言交流", desc: "分享学习心得", path: "/message", color: "bg-rose-50 text-rose-600 border-rose-100" },
     { icon: TrendingUp, label: "个人中心", desc: "查看学习进度", path: "/profile", color: "bg-teal-50 text-teal-600 border-teal-100" },
