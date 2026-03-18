@@ -3,12 +3,15 @@
  * 导航栏: 深靛蓝紫色背景, 白色文字
  * Logo区域在上方, 导航菜单在下方
  * 全局搜索功能 + 移动端菜单
+ * 已移除登录/注册相关功能
  */
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, Mic, ChevronDown, Menu, X, Volume2 } from "lucide-react";
+import { Search, Menu, X, Volume2 } from "lucide-react";
 import { searchWords, speakText, speakDong, type DongWord } from "@/lib/dongData";
 import { ToneBadge } from "@/components/ToneCurve";
+
+const LOGO_CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/dong-logo-icon_8cbb45a7.png";
 
 const navItems = [
   { label: "首页", path: "/" },
@@ -18,23 +21,20 @@ const navItems = [
   { label: "侗语学习", path: "/dong-learn" },
   { label: "声调练习", path: "/tone-compare" },
   { label: "侗族文化", path: "/culture" },
+  { label: "留言反馈", path: "/message" },
+  { label: "个人中心", path: "/profile" },
 ];
 
 export default function Navbar() {
-  const [location, navigate] = useLocation();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<DongWord[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setShowSearchResults(false);
       }
@@ -72,18 +72,32 @@ export default function Navbar() {
         </button>
 
         <div className="hidden md:flex flex-1" />
+
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-dong-rose/20 flex items-center justify-center border-2 border-dong-rose/40 group-hover:border-dong-rose/70 transition-colors">
-            <svg viewBox="0 0 40 40" className="w-7 h-7 md:w-8 md:h-8">
-              <circle cx="20" cy="20" r="8" fill="none" stroke="#c75c8e" strokeWidth="2" />
-              <line x1="20" y1="12" x2="20" y2="8" stroke="#c75c8e" strokeWidth="2" />
-              <line x1="20" y1="28" x2="20" y2="32" stroke="#c75c8e" strokeWidth="2" />
-              <path d="M14 16 Q20 6 26 16" fill="none" stroke="#c75c8e" strokeWidth="1.5" />
-              <path d="M12 18 Q20 4 28 18" fill="none" stroke="#c75c8e" strokeWidth="1" opacity="0.6" />
-              <line x1="16" y1="22" x2="16" y2="28" stroke="#c75c8e" strokeWidth="1.5" />
-              <line x1="20" y1="22" x2="20" y2="30" stroke="#c75c8e" strokeWidth="1.5" />
-              <line x1="24" y1="22" x2="24" y2="28" stroke="#c75c8e" strokeWidth="1.5" />
-            </svg>
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-dong-rose/10 flex items-center justify-center border-2 border-dong-rose/30 group-hover:border-dong-rose/60 transition-colors overflow-hidden">
+            <img
+              src={LOGO_CDN}
+              alt="侗族语言应用 Logo"
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                // 加载失败时显示备用SVG图标
+                const target = e.currentTarget;
+                target.style.display = "none";
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML = `<svg viewBox="0 0 40 40" class="w-7 h-7 md:w-8 md:h-8">
+                    <circle cx="20" cy="20" r="8" fill="none" stroke="#c75c8e" stroke-width="2"/>
+                    <line x1="20" y1="12" x2="20" y2="8" stroke="#c75c8e" stroke-width="2"/>
+                    <line x1="20" y1="28" x2="20" y2="32" stroke="#c75c8e" stroke-width="2"/>
+                    <path d="M14 16 Q20 6 26 16" fill="none" stroke="#c75c8e" stroke-width="1.5"/>
+                    <line x1="16" y1="22" x2="16" y2="28" stroke="#c75c8e" stroke-width="1.5"/>
+                    <line x1="20" y1="22" x2="20" y2="30" stroke="#c75c8e" stroke-width="1.5"/>
+                    <line x1="24" y1="22" x2="24" y2="28" stroke="#c75c8e" stroke-width="1.5"/>
+                  </svg>`;
+                }
+              }}
+            />
           </div>
           <div>
             <h1 className="text-white text-xl md:text-2xl font-serif font-bold tracking-wider">
@@ -151,7 +165,7 @@ export default function Navbar() {
                   <button
                     onClick={() => {
                       setShowSearchResults(false);
-                      navigate("/dong-learn");
+                      window.location.href = "/dong-learn";
                     }}
                     className="w-full text-center text-xs text-dong-indigo hover:text-dong-rose py-1.5 transition-colors"
                   >
@@ -171,12 +185,12 @@ export default function Navbar() {
 
       {/* Desktop Navigation Bar */}
       <nav className="hidden md:block bg-dong-indigo border-t border-white/10">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-center gap-1">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-center gap-0 flex-wrap">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.path}
-              className={`px-5 lg:px-6 py-3.5 text-sm tracking-wider transition-all relative whitespace-nowrap
+              className={`px-4 lg:px-5 py-3.5 text-sm tracking-wider transition-all relative whitespace-nowrap
                 ${location === item.path
                   ? "text-white font-medium"
                   : "text-white/75 hover:text-white"
@@ -189,47 +203,6 @@ export default function Navbar() {
               )}
             </Link>
           ))}
-
-          {/* 个人中心 Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className={`px-5 lg:px-6 py-3.5 text-sm tracking-wider transition-all flex items-center gap-1
-                ${["/login", "/message", "/profile"].includes(location)
-                  ? "text-white font-medium"
-                  : "text-white/75 hover:text-white"
-                }
-              `}
-            >
-              个人中心
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
-            </button>
-            {dropdownOpen && (
-              <div className="absolute right-0 top-full mt-0 bg-dong-indigo/95 backdrop-blur-sm border border-white/10 rounded-b-md shadow-xl min-w-[130px] overflow-hidden z-50">
-                <Link
-                  href="/profile"
-                  className="block px-5 py-3 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  个人中心
-                </Link>
-                <Link
-                  href="/message"
-                  className="block px-5 py-3 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  留言反馈
-                </Link>
-                <Link
-                  href="/login"
-                  className="block px-5 py-3 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  登录/注册
-                </Link>
-              </div>
-            )}
-          </div>
         </div>
       </nav>
 
@@ -251,15 +224,6 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/profile" className="px-6 py-3.5 text-sm text-white/75 hover:text-white hover:bg-white/5 border-b border-white/5">
-              个人中心
-            </Link>
-            <Link href="/message" className="px-6 py-3.5 text-sm text-white/75 hover:text-white hover:bg-white/5 border-b border-white/5">
-              留言反馈
-            </Link>
-            <Link href="/login" className="px-6 py-3.5 text-sm text-white/75 hover:text-white hover:bg-white/5">
-              登录/注册
-            </Link>
           </div>
         </div>
       )}

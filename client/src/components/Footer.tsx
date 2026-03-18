@@ -24,7 +24,7 @@ export default function Footer() {
               <rect x="43" y="43" width="12" height="12" rx="1" fill="currentColor" />
             </svg>
           </div>
-          <span className="text-xs text-white/50">扫二维码登录</span>
+          <span className="text-xs text-white/50">扫码关注我们</span>
         </div>
       </div>
       <div className="max-w-[1200px] mx-auto mt-6 pt-4 border-t border-white/10 text-center">

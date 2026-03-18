@@ -46,7 +46,7 @@ export default function Home() {
     { icon: Music, label: "声调练习", desc: "对比学习侗语声调", path: "/tone-compare", color: "bg-indigo-50 text-indigo-600 border-indigo-100" },
     { icon: Star, label: "侗族文化", desc: "探索侗族文化瑰宝", path: "/culture", color: "bg-amber-50 text-amber-600 border-amber-100" },
     { icon: MessageSquare, label: "留言交流", desc: "分享学习心得", path: "/message", color: "bg-rose-50 text-rose-600 border-rose-100" },
-    { icon: TrendingUp, label: "个人中心", desc: "查看学习进度", path: "/profile", color: "bg-teal-50 text-teal-600 border-teal-100" },
+    { icon: TrendingUp, label: "学习记录", desc: "查看学习进度", path: "/profile", color: "bg-teal-50 text-teal-600 border-teal-100" },
   ];
 
   return (
