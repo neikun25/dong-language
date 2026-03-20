@@ -334,6 +334,199 @@ export function saveQuizScore(lessonId: string, score: number): LearningProgress
   return progress;
 }
 
+// ========== 真实田野调查音频数据 ==========
+
+/**
+ * 田野调查真实侗语发音音频
+ * 来源：贵州榕江三宝侗寨田野调查（陆慧丹，29岁女性，5村）
+ * 每个音频文件包含该声调下多个词汇的连续发音示例
+ * 声调编号说明：55=高平调, 35=中升调, 11=低平调, 323=曲折调, 13=低升调, 31=中降调, 53=高降调, 453=曲折调, 33=中平调
+ * 舒声=开音节（元音或鼻音结尾），促声=闭音节（塞音结尾）
+ */
+export const REAL_AUDIO_CDN: Record<string, string> = {
+  // 55调（高平调）
+  "tone_55_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_55_open_628e8cee.wav",
+  "tone_55_checked": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_55_checked_e7fcdd13.wav",
+  // 35调（中升调）
+  "tone_35_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_35_open_0c3047be.wav",
+  "tone_35_checked": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_35_checked_9bd546e4.wav",
+  // 11调（低平调）
+  "tone_11_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_11_open_7a688884.wav",
+  "tone_11_checked": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_11_checked_0b3b97ac.wav",
+  // 323调（曲折调）
+  "tone_323_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_323_open_e9774197.wav",
+  "tone_323_checked": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_323_checked_ec114f57.wav",
+  // 13调（低升调）
+  "tone_13_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_13_open_fe245ba6.wav",
+  "tone_13_checked": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_13_checked_b7397897.wav",
+  // 31调（中降调）
+  "tone_31_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_31_open_0ed393ae.wav",
+  "tone_31_checked": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_31_checked_34224517.wav",
+  // 53调（高降调）
+  "tone_53_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_53_open_0dd291c7.wav",
+  // 453调（曲折调）
+  "tone_453_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_453_open_c97209f9.wav",
+  // 33调（中平调）
+  "tone_33_open": "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/tone_33_open_df8b2391.wav",
+};
+
+/**
+ * 字表词汇数据（来自田野调查）
+ * 格式：{ dongSpelling, ipa, chinese, tone, syllableType }
+ */
+export interface FieldWord {
+  dongSpelling: string;  // 侗语拼写
+  ipa: string;           // IPA音标
+  chinese: string;       // 汉语意思
+  tone: string;          // 声调编号 (55/35/11/323/13/31/53/453/33)
+  syllableType: "open" | "checked"; // 舒声/促声
+  audioKey: string;      // 对应的音频key
+}
+
+export const fieldWordList: FieldWord[] = [
+  // 55调舒声
+  { dongSpelling: "bal", ipa: "pa⁵⁵", chinese: "鱼", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "dal", ipa: "ta⁵⁵", chinese: "眼睛/外祖父", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "jenl", ipa: "ȶən⁵⁵", chinese: "别人", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "beel", ipa: "pe⁵⁵", chinese: "卖", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "gual", ipa: "kwa⁵⁵", chinese: "登记（名字）", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "badl", ipa: "pat⁵⁵", chinese: "鸭", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "adl", ipa: "at⁵⁵", chinese: "切割", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  { dongSpelling: "dedl", ipa: "tət⁵⁵", chinese: "屁", tone: "55", syllableType: "open", audioKey: "tone_55_open" },
+  // 55调促声
+  { dongSpelling: "badl", ipa: "pat⁵⁵", chinese: "鸭", tone: "55", syllableType: "checked", audioKey: "tone_55_checked" },
+  { dongSpelling: "adl", ipa: "at⁵⁵", chinese: "切割", tone: "55", syllableType: "checked", audioKey: "tone_55_checked" },
+  { dongSpelling: "dedl", ipa: "tət⁵⁵", chinese: "屁", tone: "55", syllableType: "checked", audioKey: "tone_55_checked" },
+  // 35调舒声
+  { dongSpelling: "taemk", ipa: "tʰɐm³⁵", chinese: "矮", tone: "35", syllableType: "open", audioKey: "tone_35_open" },
+  { dongSpelling: "kap", ipa: "kʰa³⁵", chinese: "耳朵", tone: "35", syllableType: "open", audioKey: "tone_35_open" },
+  { dongSpelling: "kuap", ipa: "kʰwa³⁵", chinese: "摸一下", tone: "35", syllableType: "open", audioKey: "tone_35_open" },
+  { dongSpelling: "kuanp", ipa: "kwan³⁵", chinese: "甜的", tone: "35", syllableType: "open", audioKey: "tone_35_open" },
+  { dongSpelling: "piap", ipa: "pjʰa³⁵", chinese: "喂食", tone: "35", syllableType: "open", audioKey: "tone_35_open" },
+  // 35调促声
+  { dongSpelling: "piagp", ipa: "pj'ak³⁵", chinese: "拍打；捏", tone: "35", syllableType: "checked", audioKey: "tone_35_checked" },
+  { dongSpelling: "pogp", ipa: "p'ok³⁵", chinese: "泼", tone: "35", syllableType: "checked", audioKey: "tone_35_checked" },
+  { dongSpelling: "jak", ipa: "jak³⁵", chinese: "勤快", tone: "35", syllableType: "checked", audioKey: "tone_35_checked" },
+  { dongSpelling: "sok", ipa: "sok³⁵", chinese: "狭窄", tone: "35", syllableType: "checked", audioKey: "tone_35_checked" },
+  { dongSpelling: "pʰət", ipa: "pʰət³⁵", chinese: "匹", tone: "35", syllableType: "checked", audioKey: "tone_35_checked" },
+  { dongSpelling: "kʰəp", ipa: "kʰəp³⁵", chinese: "蜈蚣", tone: "35", syllableType: "checked", audioKey: "tone_35_checked" },
+  // 11调舒声
+  { dongSpelling: "tɑ:ŋ", ipa: "tɑ:ŋ¹¹", chinese: "糖", tone: "11", syllableType: "open", audioKey: "tone_11_open" },
+  { dongSpelling: "jac", ipa: "ȶa¹¹", chinese: "茄子", tone: "11", syllableType: "open", audioKey: "tone_11_open" },
+  { dongSpelling: "ȶu", ipa: "ȶu¹¹", chinese: "姑父（父妹之夫）", tone: "11", syllableType: "open", audioKey: "tone_11_open" },
+  { dongSpelling: "daoc", ipa: "kʰau¹¹", chinese: "酒糟", tone: "11", syllableType: "open", audioKey: "tone_11_open" },
+  { dongSpelling: "pa:u", ipa: "pa:u¹¹", chinese: "柚子", tone: "11", syllableType: "open", audioKey: "tone_11_open" },
+  // 11调促声
+  { dongSpelling: "jogc", ipa: "ȶok¹¹", chinese: "跪", tone: "11", syllableType: "checked", audioKey: "tone_11_checked" },
+  { dongSpelling: "bagc", ipa: "pak¹¹", chinese: "萝卜", tone: "11", syllableType: "checked", audioKey: "tone_11_checked" },
+  { dongSpelling: "dabc", ipa: "tap¹¹", chinese: "丢；扔", tone: "11", syllableType: "checked", audioKey: "tone_11_checked" },
+  { dongSpelling: "jagc", ipa: "ȶak¹¹", chinese: "[量词]个", tone: "11", syllableType: "checked", audioKey: "tone_11_checked" },
+  { dongSpelling: "jabc", ipa: "ȶap¹¹", chinese: "砸人", tone: "11", syllableType: "checked", audioKey: "tone_11_checked" },
+  // 323调舒声
+  { dongSpelling: "gaos", ipa: "kao³²³", chinese: "头；端", tone: "323", syllableType: "open", audioKey: "tone_323_open" },
+  { dongSpelling: "bas", ipa: "pa³²³", chinese: "姑母", tone: "323", syllableType: "open", audioKey: "tone_323_open" },
+  { dongSpelling: "pja", ipa: "pja³²³", chinese: "雷", tone: "323", syllableType: "open", audioKey: "tone_323_open" },
+  { dongSpelling: "deis", ipa: "təi³²³", chinese: "瞧，偷看", tone: "323", syllableType: "open", audioKey: "tone_323_open" },
+  { dongSpelling: "te", ipa: "te³²³", chinese: "下面", tone: "323", syllableType: "open", audioKey: "tone_323_open" },
+  // 323调促声
+  { dongSpelling: "beds", ipa: "pət³²³", chinese: "八", tone: "323", syllableType: "checked", audioKey: "tone_323_checked" },
+  { dongSpelling: "begs", ipa: "pək³²³", chinese: "百", tone: "323", syllableType: "checked", audioKey: "tone_323_checked" },
+  { dongSpelling: "biags", ipa: "pjak³²³", chinese: "额头", tone: "323", syllableType: "checked", audioKey: "tone_323_checked" },
+  { dongSpelling: "dids", ipa: "tit³²³", chinese: "用手指弹", tone: "323", syllableType: "checked", audioKey: "tone_323_checked" },
+  // 13调舒声
+  { dongSpelling: "thənl", ipa: "thən¹³", chinese: "短", tone: "13", syllableType: "open", audioKey: "tone_13_open" },
+  { dongSpelling: "ȶha:ml", ipa: "ȶha:m¹³", chinese: "走", tone: "13", syllableType: "open", audioKey: "tone_13_open" },
+  { dongSpelling: "ȶhal", ipa: "ȶhal¹³", chinese: "轻", tone: "13", syllableType: "open", audioKey: "tone_13_open" },
+  { dongSpelling: "won", ipa: "won¹³", chinese: "吐", tone: "13", syllableType: "open", audioKey: "tone_13_open" },
+  { dongSpelling: "wen", ipa: "wen¹³", chinese: "裙子", tone: "13", syllableType: "open", audioKey: "tone_13_open" },
+  { dongSpelling: "qit", ipa: "ȶʰi¹³", chinese: "起、开始", tone: "13", syllableType: "open", audioKey: "tone_13_open" },
+  // 13调促声
+  { dongSpelling: "pegt", ipa: "pʰək¹³", chinese: "贴，拍", tone: "13", syllableType: "checked", audioKey: "tone_13_checked" },
+  { dongSpelling: "pugt", ipa: "pʰuk¹³", chinese: "[名词]灰", tone: "13", syllableType: "checked", audioKey: "tone_13_checked" },
+  { dongSpelling: "piidt", ipa: "pjʰit¹³", chinese: "削", tone: "13", syllableType: "checked", audioKey: "tone_13_checked" },
+  { dongSpelling: "cit", ipa: "cit¹³", chinese: "踢", tone: "13", syllableType: "checked", audioKey: "tone_13_checked" },
+  { dongSpelling: "phadt", ipa: "phadt¹³", chinese: "血", tone: "13", syllableType: "checked", audioKey: "tone_13_checked" },
+  // 31调舒声
+  { dongSpelling: "jaix", ipa: "ȶai³¹", chinese: "哥、姐", tone: "31", syllableType: "open", audioKey: "tone_31_open" },
+  { dongSpelling: "jaox", ipa: "ȶau³¹", chinese: "交钱", tone: "31", syllableType: "open", audioKey: "tone_31_open" },
+  { dongSpelling: "jaenx", ipa: "ȶɐn³¹", chinese: "近", tone: "31", syllableType: "open", audioKey: "tone_31_open" },
+  { dongSpelling: "pən", ipa: "pən³¹", chinese: "溢", tone: "31", syllableType: "open", audioKey: "tone_31_open" },
+  { dongSpelling: "diux", ipa: "tiu³¹", chinese: "聪明、能干", tone: "31", syllableType: "open", audioKey: "tone_31_open" },
+  // 31调促声
+  { dongSpelling: "bugx", ipa: "puk³¹", chinese: "泡沫；笨拙", tone: "31", syllableType: "checked", audioKey: "tone_31_checked" },
+  { dongSpelling: "biadx", ipa: "pjat³¹", chinese: "摔跤", tone: "31", syllableType: "checked", audioKey: "tone_31_checked" },
+  { dongSpelling: "dabx", ipa: "tap³¹", chinese: "冲；踢；舂", tone: "31", syllableType: "checked", audioKey: "tone_31_checked" },
+  { dongSpelling: "dibx", ipa: "tip³¹", chinese: "碟子", tone: "31", syllableType: "checked", audioKey: "tone_31_checked" },
+  { dongSpelling: "pik", ipa: "pik³¹", chinese: "鲫鱼", tone: "31", syllableType: "checked", audioKey: "tone_31_checked" },
+  // 53调舒声
+  { dongSpelling: "baenv", ipa: "pɐn⁵³", chinese: "扔掉", tone: "53", syllableType: "open", audioKey: "tone_53_open" },
+  { dongSpelling: "ja", ipa: "ja⁵³", chinese: "水田、田", tone: "53", syllableType: "open", audioKey: "tone_53_open" },
+  { dongSpelling: "daiv", ipa: "tai⁵³", chinese: "带着", tone: "53", syllableType: "open", audioKey: "tone_53_open" },
+  { dongSpelling: "guav", ipa: "kwa⁵³", chinese: "斥责、骂", tone: "53", syllableType: "open", audioKey: "tone_53_open" },
+  { dongSpelling: "ai", ipa: "ai⁵³", chinese: "鸡", tone: "53", syllableType: "open", audioKey: "tone_53_open" },
+  // 453调舒声
+  { dongSpelling: "phu", ipa: "phu⁴⁵³", chinese: "商店", tone: "453", syllableType: "open", audioKey: "tone_453_open" },
+  { dongSpelling: "than", ipa: "than⁴⁵³", chinese: "炭", tone: "453", syllableType: "open", audioKey: "tone_453_open" },
+  { dongSpelling: "pak", ipa: "pʰa⁴⁵³", chinese: "坏掉了", tone: "453", syllableType: "open", audioKey: "tone_453_open" },
+  { dongSpelling: "ȶhing", ipa: "ȶhing⁴⁵³", chinese: "听", tone: "453", syllableType: "open", audioKey: "tone_453_open" },
+  { dongSpelling: "pieek", ipa: "pjʰe⁴⁵³", chinese: "送、给", tone: "453", syllableType: "open", audioKey: "tone_453_open" },
+  // 33调舒声
+  { dongSpelling: "jah", ipa: "ȶa³³", chinese: "代指，那儿（近指）", tone: "33", syllableType: "open", audioKey: "tone_33_open" },
+  { dongSpelling: "janh", ipa: "ȶan³³", chinese: "碰、撞", tone: "33", syllableType: "open", audioKey: "tone_33_open" },
+  { dongSpelling: "banh", ipa: "paŋ³³", chinese: "靠", tone: "33", syllableType: "open", audioKey: "tone_33_open" },
+  { dongSpelling: "beeh", ipa: "pe³³", chinese: "打/拍", tone: "33", syllableType: "open", audioKey: "tone_33_open" },
+  { dongSpelling: "bianh", ipa: "pjan³³", chinese: "撒，播", tone: "33", syllableType: "open", audioKey: "tone_33_open" },
+];
+
+/**
+ * 声调信息表
+ */
+export const toneInfo: Record<string, { name: string; description: string; example: string; color: string }> = {
+  "55": { name: "高平调", description: "音高保持在高位，平稳不变", example: "bal(鱼)", color: "#e74c3c" },
+  "35": { name: "中升调", description: "从中音位置上升到高音", example: "taemk(矮)", color: "#e67e22" },
+  "11": { name: "低平调", description: "音高保持在低位，平稳不变", example: "tɑ:ŋ(糖)", color: "#27ae60" },
+  "323": { name: "曲折调", description: "从中音降到低音再升回中音", example: "gaos(头)", color: "#2980b9" },
+  "13": { name: "低升调", description: "从低音位置上升到中音", example: "thənl(短)", color: "#8e44ad" },
+  "31": { name: "中降调", description: "从中音位置下降到低音", example: "jaix(哥/姐)", color: "#16a085" },
+  "53": { name: "高降调", description: "从高音位置快速下降到中音", example: "baenv(扔掉)", color: "#c0392b" },
+  "453": { name: "升降调", description: "从中音升到高音再降到中音", example: "phu(商店)", color: "#d35400" },
+  "33": { name: "中平调", description: "音高保持在中位，平稳不变", example: "jah(那儿)", color: "#7f8c8d" },
+};
+
+/**
+ * 根据侗语拼音获取对应的真实音频URL
+ * 通过分析IPA声调标记来确定声调类型
+ */
+export function getRealAudioUrl(dongPinyin: string): string | null {
+  if (!dongPinyin) return null;
+  
+  // 检测是否为促声（塞音结尾：p/t/k/ʔ）
+  const isChecked = /[ptk]\s*$|[ptk][˦˧˩˥]/.test(dongPinyin) || 
+    dongPinyin.includes("˧") && /[ptk]/.test(dongPinyin.split(/\s+/).pop() || "");
+  
+  // 从IPA中提取声调数字
+  let toneKey = "";
+  if (dongPinyin.includes("˦˦") || dongPinyin.includes("55")) toneKey = "55";
+  else if (dongPinyin.includes("˧˥") || dongPinyin.includes("35")) toneKey = "35";
+  else if (dongPinyin.includes("˩˩") || dongPinyin.includes("11")) toneKey = "11";
+  else if (dongPinyin.includes("˧˩˧") || dongPinyin.includes("323")) toneKey = "323";
+  else if (dongPinyin.includes("˩˧") || dongPinyin.includes("13")) toneKey = "13";
+  else if (dongPinyin.includes("˧˩") || dongPinyin.includes("31")) toneKey = "31";
+  else if (dongPinyin.includes("˥˧") || dongPinyin.includes("53")) toneKey = "53";
+  else if (dongPinyin.includes("453")) toneKey = "453";
+  else if (dongPinyin.includes("˧˧") || dongPinyin.includes("33")) toneKey = "33";
+  // 单个声调符号的情况
+  else if (dongPinyin.includes("˦")) toneKey = "55";
+  else if (dongPinyin.includes("˧")) toneKey = "33";
+  else if (dongPinyin.includes("˩")) toneKey = "11";
+  
+  if (!toneKey) return null;
+  
+  const syllableType = isChecked ? "checked" : "open";
+  const key = `tone_${toneKey}_${syllableType}`;
+  return REAL_AUDIO_CDN[key] || REAL_AUDIO_CDN[`tone_${toneKey}_open`] || null;
+}
+
 // ========== 工具函数 ==========
 
 /**
@@ -393,21 +586,51 @@ const dongSyllableMap: Record<string, string> = {
 
 /**
  * 侗语发音函数
- * 通过逐音节朗读侗语拼音来近似侗语发音
- * 使用Web Audio API生成提示音 + 语音合成逐音节朗读
+ * 优先使用田野调查真实音频，无音频时使用语音合成近似
  */
-export function speakDong(dongText: string, dongPinyin?: string): boolean {
-  if (!("speechSynthesis" in window)) return false;
-  speechSynthesis.cancel();
+let currentAudio: HTMLAudioElement | null = null;
 
+export function speakDong(dongText: string, dongPinyin?: string): boolean {
+  // 停止当前播放
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+  
   // 查找词汇获取侗语拼音
   let pinyin = dongPinyin;
   if (!pinyin) {
     const word = dongDictionary.find(w => w.dong === dongText || w.chinese === dongText);
     if (word) pinyin = word.dongPinyin;
   }
+  
+  // 优先使用真实音频
+  if (pinyin) {
+    const audioUrl = getRealAudioUrl(pinyin);
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.volume = 1.0;
+      currentAudio = audio;
+      audio.play().catch(() => {
+        // 音频播放失败时回退到语音合成
+        speakDongFallback(dongText, pinyin!);
+      });
+      return true;
+    }
+  }
+  
+  // 回退到语音合成
+  return speakDongFallback(dongText, pinyin);
+}
+
+/**
+ * 侗语发音回退函数（语音合成近似）
+ */
+function speakDongFallback(dongText: string, pinyin?: string): boolean {
+  if (!("speechSynthesis" in window)) return false;
+  speechSynthesis.cancel();
+
   if (!pinyin) {
-    // 如果找不到拼音，直接用侗语文字尝试朗读
     const utterance = new SpeechSynthesisUtterance(dongText);
     utterance.lang = "zh-CN";
     utterance.rate = 0.5;

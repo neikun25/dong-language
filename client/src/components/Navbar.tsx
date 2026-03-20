@@ -20,6 +20,7 @@ const navItems = [
   { label: "普通话学习", path: "/mandarin-learn" },
   { label: "侗语学习", path: "/dong-learn" },
   { label: "声调练习", path: "/tone-compare" },
+  { label: "田野录音", path: "/field-data" },
   { label: "侗族文化", path: "/culture" },
   { label: "留言反馈", path: "/message" },
   { label: "个人中心", path: "/profile" },
