@@ -8,102 +8,104 @@ export interface DongWord {
   id: string;
   chinese: string;
   dong: string;
-  dongPinyin: string;
+  dongPinyin: string;   // IPA音标（含声调符号）
   mandarinPinyin: string;
   category: string;
   example?: string;
   exampleDong?: string;
   difficulty: 1 | 2 | 3; // 1=初级 2=中级 3=高级
+  toneCode?: string;     // 声调编号（55/35/11/323/13/31/53/453/33）
+  syllableType?: "open" | "checked"; // 舒声/促声
 }
 
 export const dongDictionary: DongWord[] = [
   // 日常问候
-  { id: "w001", chinese: "你好", dong: "mii laox", dongPinyin: "mi˧ lau˦", mandarinPinyin: "nǐ hǎo", category: "日常问候", example: "你好，朋友！", exampleDong: "Mii laox, bioul nyenc!", difficulty: 1 },
-  { id: "w002", chinese: "谢谢", dong: "laox siik", dongPinyin: "lau˦ si:k˧", mandarinPinyin: "xiè xie", category: "日常问候", example: "谢谢你的帮助", exampleDong: "Laox siik mii bangc", difficulty: 1 },
-  { id: "w003", chinese: "再见", dong: "bail laox", dongPinyin: "pai˩ lau˦", mandarinPinyin: "zài jiàn", category: "日常问候", example: "明天再见", exampleDong: "Wangl nyiedl bail laox", difficulty: 1 },
-  { id: "w004", chinese: "早上好", dong: "zaol sangc laox", dongPinyin: "tsau˩ saŋ˧ lau˦", mandarinPinyin: "zǎo shang hǎo", category: "日常问候", difficulty: 1 },
-  { id: "w005", chinese: "晚上好", dong: "wanl sangc laox", dongPinyin: "wan˩ saŋ˧ lau˦", mandarinPinyin: "wǎn shang hǎo", category: "日常问候", difficulty: 1 },
-  { id: "w006", chinese: "对不起", dong: "duix buc qiil", dongPinyin: "tui˦ pu˧ tɕi:˩", mandarinPinyin: "duì bu qǐ", category: "日常问候", difficulty: 1 },
-  { id: "w007", chinese: "没关系", dong: "meix guanl xil", dongPinyin: "mei˦ kuan˩ ɕi˩", mandarinPinyin: "méi guān xi", category: "日常问候", difficulty: 1 },
+  { id: "w001", chinese: "你好", dong: "mii laox", dongPinyin: "mi³³ lau⁵⁵", mandarinPinyin: "nǐ hǎo", category: "日常问候", example: "你好，朋友！", exampleDong: "Mii laox, bioul nyenc!", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w002", chinese: "谢谢", dong: "laox siik", dongPinyin: "lau⁵⁵ sik³³", mandarinPinyin: "xiè xie", category: "日常问候", example: "谢谢你的帮助", exampleDong: "Laox siik mii bangc", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w003", chinese: "再见", dong: "bail laox", dongPinyin: "pai¹¹ lau⁵⁵", mandarinPinyin: "zài jiàn", category: "日常问候", example: "明天再见", exampleDong: "Wangl nyiedl bail laox", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w004", chinese: "早上好", dong: "zaol sangc laox", dongPinyin: "tsau¹¹ saŋ³³ lau⁵⁵", mandarinPinyin: "zǎo shang hǎo", category: "日常问候", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w005", chinese: "晚上好", dong: "wanl sangc laox", dongPinyin: "wan¹¹ saŋ³³ lau⁵⁵", mandarinPinyin: "wǎn shang hǎo", category: "日常问候", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w006", chinese: "对不起", dong: "duix buc qiil", dongPinyin: "tui⁵⁵ pu³³ tɕi¹¹", mandarinPinyin: "duì bu qǐ", category: "日常问候", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w007", chinese: "没关系", dong: "meix guanl xil", dongPinyin: "mei⁵⁵ kuan¹¹ ɕi¹¹", mandarinPinyin: "méi guān xi", category: "日常问候", difficulty: 1, toneCode: "55", syllableType: "open" },
 
   // 家庭称谓
-  { id: "w010", chinese: "父亲", dong: "bux", dongPinyin: "pu˦", mandarinPinyin: "fù qīn", category: "家庭称谓", example: "我的父亲", exampleDong: "Wul bux", difficulty: 1 },
-  { id: "w011", chinese: "母亲", dong: "max", dongPinyin: "ma˦", mandarinPinyin: "mǔ qīn", category: "家庭称谓", example: "我的母亲", exampleDong: "Wul max", difficulty: 1 },
-  { id: "w012", chinese: "哥哥", dong: "beix", dongPinyin: "pei˦", mandarinPinyin: "gē ge", category: "家庭称谓", difficulty: 1 },
-  { id: "w013", chinese: "姐姐", dong: "jax", dongPinyin: "tɕa˦", mandarinPinyin: "jiě jie", category: "家庭称谓", difficulty: 1 },
-  { id: "w014", chinese: "弟弟", dong: "nongx", dongPinyin: "noŋ˦", mandarinPinyin: "dì di", category: "家庭称谓", difficulty: 1 },
-  { id: "w015", chinese: "妹妹", dong: "muix", dongPinyin: "mui˦", mandarinPinyin: "mèi mei", category: "家庭称谓", difficulty: 1 },
-  { id: "w016", chinese: "爷爷", dong: "gongx", dongPinyin: "koŋ˦", mandarinPinyin: "yé ye", category: "家庭称谓", difficulty: 1 },
-  { id: "w017", chinese: "奶奶", dong: "naix", dongPinyin: "nai˦", mandarinPinyin: "nǎi nai", category: "家庭称谓", difficulty: 1 },
-  { id: "w018", chinese: "朋友", dong: "bioul nyenc", dongPinyin: "piou˩ ɲen˧", mandarinPinyin: "péng you", category: "家庭称谓", example: "我的好朋友", exampleDong: "Wul bioul nyenc laox", difficulty: 1 },
+  { id: "w010", chinese: "父亲", dong: "bux", dongPinyin: "pu⁵⁵", mandarinPinyin: "fù qīn", category: "家庭称谓", example: "我的父亲", exampleDong: "Wul bux", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w011", chinese: "母亲", dong: "max", dongPinyin: "ma⁵⁵", mandarinPinyin: "mǔ qīn", category: "家庭称谓", example: "我的母亲", exampleDong: "Wul max", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w012", chinese: "哥哥", dong: "beix", dongPinyin: "pei³¹", mandarinPinyin: "gē ge", category: "家庭称谓", difficulty: 1, toneCode: "31", syllableType: "open" },
+  { id: "w013", chinese: "姐姐", dong: "jax", dongPinyin: "tɕa⁵⁵", mandarinPinyin: "jiě jie", category: "家庭称谓", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w014", chinese: "弟弟", dong: "nongx", dongPinyin: "noŋ⁵⁵", mandarinPinyin: "dì di", category: "家庭称谓", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w015", chinese: "妹妹", dong: "muix", dongPinyin: "mui⁵⁵", mandarinPinyin: "mèi mei", category: "家庭称谓", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w016", chinese: "爷爷", dong: "gongx", dongPinyin: "koŋ⁵⁵", mandarinPinyin: "yé ye", category: "家庭称谓", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w017", chinese: "奶奶", dong: "naix", dongPinyin: "nai⁵⁵", mandarinPinyin: "nǎi nai", category: "家庭称谓", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w018", chinese: "朋友", dong: "bioul nyenc", dongPinyin: "piou¹¹ ɲen³³", mandarinPinyin: "péng you", category: "家庭称谓", example: "我的好朋友", exampleDong: "Wul bioul nyenc laox", difficulty: 1, toneCode: "11", syllableType: "open" },
 
   // 自然万物
-  { id: "w020", chinese: "山", dong: "bya", dongPinyin: "pja˩", mandarinPinyin: "shān", category: "自然万物", example: "高山", exampleDong: "Bya goux", difficulty: 1 },
-  { id: "w021", chinese: "水", dong: "naml", dongPinyin: "nam˩", mandarinPinyin: "shuǐ", category: "自然万物", difficulty: 1 },
-  { id: "w022", chinese: "太阳", dong: "wenc nyiedl", dongPinyin: "wen˧ ɲiet˩", mandarinPinyin: "tài yáng", category: "自然万物", difficulty: 1 },
-  { id: "w023", chinese: "月亮", dong: "laox nyiedl", dongPinyin: "lau˦ ɲiet˩", mandarinPinyin: "yuè liang", category: "自然万物", difficulty: 1 },
-  { id: "w024", chinese: "星星", dong: "daol", dongPinyin: "tau˩", mandarinPinyin: "xīng xing", category: "自然万物", difficulty: 1 },
-  { id: "w025", chinese: "风", dong: "naemx", dongPinyin: "naem˦", mandarinPinyin: "fēng", category: "自然万物", difficulty: 1 },
-  { id: "w026", chinese: "雨", dong: "naemx raemx", dongPinyin: "naem˦ ɣaem˦", mandarinPinyin: "yǔ", category: "自然万物", difficulty: 1 },
-  { id: "w027", chinese: "花", dong: "bax", dongPinyin: "pa˦", mandarinPinyin: "huā", category: "自然万物", difficulty: 1 },
-  { id: "w028", chinese: "树", dong: "maix", dongPinyin: "mai˦", mandarinPinyin: "shù", category: "自然万物", difficulty: 2 },
-  { id: "w029", chinese: "鸟", dong: "rogl", dongPinyin: "ɣok˩", mandarinPinyin: "niǎo", category: "自然万物", difficulty: 1 },
-  { id: "w030", chinese: "鱼", dong: "bax", dongPinyin: "pa˦", mandarinPinyin: "yú", category: "自然万物", difficulty: 1 },
+  { id: "w020", chinese: "山", dong: "bya", dongPinyin: "pja¹¹", mandarinPinyin: "shān", category: "自然万物", example: "高山", exampleDong: "Bya goux", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w021", chinese: "水", dong: "naml", dongPinyin: "nam¹¹", mandarinPinyin: "shuǐ", category: "自然万物", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w022", chinese: "太阳", dong: "wenc nyiedl", dongPinyin: "wen³³ ɲiet¹¹", mandarinPinyin: "tài yáng", category: "自然万物", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w023", chinese: "月亮", dong: "laox nyiedl", dongPinyin: "lau⁵⁵ ɲiet¹¹", mandarinPinyin: "yuè liang", category: "自然万物", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w024", chinese: "星星", dong: "daol", dongPinyin: "tau¹¹", mandarinPinyin: "xīng xing", category: "自然万物", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w025", chinese: "风", dong: "naemx", dongPinyin: "naem⁵⁵", mandarinPinyin: "fēng", category: "自然万物", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w026", chinese: "雨", dong: "naemx raemx", dongPinyin: "naem⁵⁵ ɣaem⁵⁵", mandarinPinyin: "yǔ", category: "自然万物", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w027", chinese: "花", dong: "bax", dongPinyin: "pa⁵⁵", mandarinPinyin: "huā", category: "自然万物", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w028", chinese: "树", dong: "maix", dongPinyin: "mai⁵⁵", mandarinPinyin: "shù", category: "自然万物", difficulty: 2, toneCode: "55", syllableType: "open" },
+  { id: "w029", chinese: "鸟", dong: "rogl", dongPinyin: "ɣok¹¹", mandarinPinyin: "niǎo", category: "自然万物", difficulty: 1, toneCode: "11", syllableType: "checked" },
+  { id: "w030", chinese: "鱼", dong: "bal", dongPinyin: "pa⁵⁵", mandarinPinyin: "yú", category: "自然万物", difficulty: 1, toneCode: "55", syllableType: "open" },
 
   // 饮食
-  { id: "w040", chinese: "吃饭", dong: "nyaoc jax", dongPinyin: "ɲau˧ tɕa˦", mandarinPinyin: "chī fàn", category: "饮食", example: "我们一起吃饭", exampleDong: "Jaengl nyaoc jax", difficulty: 1 },
-  { id: "w041", chinese: "喝水", dong: "nyaoc naml", dongPinyin: "ɲau˧ nam˩", mandarinPinyin: "hē shuǐ", category: "饮食", difficulty: 1 },
-  { id: "w042", chinese: "米饭", dong: "jax", dongPinyin: "tɕa˦", mandarinPinyin: "mǐ fàn", category: "饮食", difficulty: 1 },
-  { id: "w043", chinese: "酸鱼", dong: "bax siinl", dongPinyin: "pa˦ si:n˩", mandarinPinyin: "suān yú", category: "饮食", example: "侗族酸鱼是特色美食", difficulty: 2 },
-  { id: "w044", chinese: "糯米", dong: "jax nox", dongPinyin: "tɕa˦ no˦", mandarinPinyin: "nuò mǐ", category: "饮食", difficulty: 2 },
-  { id: "w045", chinese: "油茶", dong: "jax sac", dongPinyin: "tɕa˦ sa˧", mandarinPinyin: "yóu chá", category: "饮食", example: "侗族油茶是待客佳品", difficulty: 2 },
-  { id: "w046", chinese: "酒", dong: "laox jiul", dongPinyin: "lau˦ tɕiu˩", mandarinPinyin: "jiǔ", category: "饮食", difficulty: 1 },
+  { id: "w040", chinese: "吃饭", dong: "nyaoc jax", dongPinyin: "ɲau³³ tɕa⁵⁵", mandarinPinyin: "chī fàn", category: "饮食", example: "我们一起吃饭", exampleDong: "Jaengl nyaoc jax", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w041", chinese: "喝水", dong: "nyaoc naml", dongPinyin: "ɲau³³ nam¹¹", mandarinPinyin: "hē shuǐ", category: "饮食", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w042", chinese: "米饭", dong: "jax", dongPinyin: "tɕa⁵⁵", mandarinPinyin: "mǐ fàn", category: "饮食", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w043", chinese: "酸鱼", dong: "bal siinl", dongPinyin: "pa⁵⁵ sin¹¹", mandarinPinyin: "suān yú", category: "饮食", example: "侗族酸鱼是特色美食", difficulty: 2, toneCode: "55", syllableType: "open" },
+  { id: "w044", chinese: "糯米", dong: "jax nox", dongPinyin: "tɕa⁵⁵ no⁵⁵", mandarinPinyin: "nuò mǐ", category: "饮食", difficulty: 2, toneCode: "55", syllableType: "open" },
+  { id: "w045", chinese: "油茶", dong: "jax sac", dongPinyin: "tɕa⁵⁵ sa³³", mandarinPinyin: "yóu chá", category: "饮食", example: "侗族油茶是待客佳品", difficulty: 2, toneCode: "55", syllableType: "open" },
+  { id: "w046", chinese: "酒", dong: "laox jiul", dongPinyin: "lau⁵⁵ tɕiu¹¹", mandarinPinyin: "jiǔ", category: "饮食", difficulty: 1, toneCode: "55", syllableType: "open" },
 
   // 文化艺术
-  { id: "w050", chinese: "唱歌", dong: "al gal", dongPinyin: "a˩ ka˩", mandarinPinyin: "chàng gē", category: "文化艺术", example: "侗族人爱唱歌", exampleDong: "Gaeml al gal", difficulty: 1 },
-  { id: "w051", chinese: "跳舞", dong: "diux wux", dongPinyin: "tiu˦ wu˦", mandarinPinyin: "tiào wǔ", category: "文化艺术", difficulty: 1 },
-  { id: "w052", chinese: "大歌", dong: "al laox", dongPinyin: "a˩ lau˦", mandarinPinyin: "dà gē", category: "文化艺术", example: "侗族大歌是世界非遗", exampleDong: "Al laox Gaeml", difficulty: 2 },
-  { id: "w053", chinese: "鼓楼", dong: "gul laox", dongPinyin: "ku˩ lau˦", mandarinPinyin: "gǔ lóu", category: "文化艺术", example: "鼓楼是侗寨的标志", exampleDong: "Gul laox Gaeml", difficulty: 2 },
-  { id: "w054", chinese: "风雨桥", dong: "jiul bail", dongPinyin: "tɕiu˩ pai˩", mandarinPinyin: "fēng yǔ qiáo", category: "文化艺术", difficulty: 2 },
-  { id: "w055", chinese: "芦笙", dong: "lenx", dongPinyin: "len˦", mandarinPinyin: "lú shēng", category: "文化艺术", example: "芦笙是侗族传统乐器", difficulty: 2 },
-  { id: "w056", chinese: "刺绣", dong: "xiul", dongPinyin: "ɕiu˩", mandarinPinyin: "cì xiù", category: "文化艺术", difficulty: 2 },
-  { id: "w057", chinese: "侗布", dong: "bux Gaeml", dongPinyin: "pu˦ kaem˩", mandarinPinyin: "dòng bù", category: "文化艺术", difficulty: 3 },
+  { id: "w050", chinese: "唱歌", dong: "al gal", dongPinyin: "a¹¹ ka¹¹", mandarinPinyin: "chàng gē", category: "文化艺术", example: "侗族人爱唱歌", exampleDong: "Gaeml al gal", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w051", chinese: "跳舞", dong: "diux wux", dongPinyin: "tiu³¹ wu⁵⁵", mandarinPinyin: "tiào wǔ", category: "文化艺术", difficulty: 1, toneCode: "31", syllableType: "open" },
+  { id: "w052", chinese: "大歌", dong: "al laox", dongPinyin: "a¹¹ lau⁵⁵", mandarinPinyin: "dà gē", category: "文化艺术", example: "侗族大歌是世界非遗", exampleDong: "Al laox Gaeml", difficulty: 2, toneCode: "11", syllableType: "open" },
+  { id: "w053", chinese: "鼓楼", dong: "gul laox", dongPinyin: "ku¹¹ lau⁵⁵", mandarinPinyin: "gǔ lóu", category: "文化艺术", example: "鼓楼是侗寨的标志", exampleDong: "Gul laox Gaeml", difficulty: 2, toneCode: "11", syllableType: "open" },
+  { id: "w054", chinese: "风雨桥", dong: "jiul bail", dongPinyin: "tɕiu¹¹ pai¹¹", mandarinPinyin: "fēng yǔ qiáo", category: "文化艺术", difficulty: 2, toneCode: "11", syllableType: "open" },
+  { id: "w055", chinese: "芦笙", dong: "lenx", dongPinyin: "len⁵⁵", mandarinPinyin: "lú shēng", category: "文化艺术", example: "芦笙是侗族传统乐器", difficulty: 2, toneCode: "55", syllableType: "open" },
+  { id: "w056", chinese: "刺绣", dong: "xiul", dongPinyin: "ɕiu¹¹", mandarinPinyin: "cì xiù", category: "文化艺术", difficulty: 2, toneCode: "11", syllableType: "open" },
+  { id: "w057", chinese: "侗布", dong: "bux Gaeml", dongPinyin: "pu⁵⁵ kaem¹¹", mandarinPinyin: "dòng bù", category: "文化艺术", difficulty: 3, toneCode: "55", syllableType: "open" },
 
   // 数字
-  { id: "w060", chinese: "一", dong: "idl", dongPinyin: "it˩", mandarinPinyin: "yī", category: "数字", difficulty: 1 },
-  { id: "w061", chinese: "二", dong: "nuih", dongPinyin: "nui˧˥", mandarinPinyin: "èr", category: "数字", difficulty: 1 },
-  { id: "w062", chinese: "三", dong: "saml", dongPinyin: "sam˩", mandarinPinyin: "sān", category: "数字", difficulty: 1 },
-  { id: "w063", chinese: "四", dong: "seix", dongPinyin: "sei˦", mandarinPinyin: "sì", category: "数字", difficulty: 1 },
-  { id: "w064", chinese: "五", dong: "hac", dongPinyin: "ha˧", mandarinPinyin: "wǔ", category: "数字", difficulty: 1 },
-  { id: "w065", chinese: "六", dong: "logc", dongPinyin: "lok˧", mandarinPinyin: "liù", category: "数字", difficulty: 1 },
-  { id: "w066", chinese: "七", dong: "cedc", dongPinyin: "tɕet˧", mandarinPinyin: "qī", category: "数字", difficulty: 1 },
-  { id: "w067", chinese: "八", dong: "betc", dongPinyin: "pet˧", mandarinPinyin: "bā", category: "数字", difficulty: 1 },
-  { id: "w068", chinese: "九", dong: "jiux", dongPinyin: "tɕiu˦", mandarinPinyin: "jiǔ", category: "数字", difficulty: 1 },
-  { id: "w069", chinese: "十", dong: "sibc", dongPinyin: "sip˧", mandarinPinyin: "shí", category: "数字", difficulty: 1 },
+  { id: "w060", chinese: "一", dong: "idl", dongPinyin: "it¹¹", mandarinPinyin: "yī", category: "数字", difficulty: 1, toneCode: "11", syllableType: "checked" },
+  { id: "w061", chinese: "二", dong: "nuih", dongPinyin: "nui³⁵", mandarinPinyin: "èr", category: "数字", difficulty: 1, toneCode: "35", syllableType: "open" },
+  { id: "w062", chinese: "三", dong: "saml", dongPinyin: "sam¹¹", mandarinPinyin: "sān", category: "数字", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w063", chinese: "四", dong: "seix", dongPinyin: "sei⁵⁵", mandarinPinyin: "sì", category: "数字", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w064", chinese: "五", dong: "hac", dongPinyin: "ha³³", mandarinPinyin: "wǔ", category: "数字", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w065", chinese: "六", dong: "logc", dongPinyin: "lok³³", mandarinPinyin: "liù", category: "数字", difficulty: 1, toneCode: "33", syllableType: "checked" },
+  { id: "w066", chinese: "七", dong: "cedc", dongPinyin: "tɕet³³", mandarinPinyin: "qī", category: "数字", difficulty: 1, toneCode: "33", syllableType: "checked" },
+  { id: "w067", chinese: "八", dong: "betc", dongPinyin: "pət³²³", mandarinPinyin: "bā", category: "数字", difficulty: 1, toneCode: "323", syllableType: "checked" },
+  { id: "w068", chinese: "九", dong: "jiux", dongPinyin: "tɕiu⁵⁵", mandarinPinyin: "jiǔ", category: "数字", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w069", chinese: "十", dong: "sibc", dongPinyin: "sip³³", mandarinPinyin: "shí", category: "数字", difficulty: 1, toneCode: "33", syllableType: "checked" },
 
   // 身体部位
-  { id: "w070", chinese: "头", dong: "hnauc", dongPinyin: "n̥au˧", mandarinPinyin: "tóu", category: "身体部位", difficulty: 1 },
-  { id: "w071", chinese: "眼睛", dong: "dal", dongPinyin: "ta˩", mandarinPinyin: "yǎn jing", category: "身体部位", difficulty: 1 },
-  { id: "w072", chinese: "耳朵", dong: "nyac", dongPinyin: "ɲa˧", mandarinPinyin: "ěr duo", category: "身体部位", difficulty: 1 },
-  { id: "w073", chinese: "手", dong: "mux", dongPinyin: "mu˦", mandarinPinyin: "shǒu", category: "身体部位", difficulty: 1 },
-  { id: "w074", chinese: "脚", dong: "dinl", dongPinyin: "tin˩", mandarinPinyin: "jiǎo", category: "身体部位", difficulty: 1 },
-  { id: "w075", chinese: "心", dong: "siml", dongPinyin: "sim˩", mandarinPinyin: "xīn", category: "身体部位", difficulty: 1 },
+  { id: "w070", chinese: "头", dong: "hnauc", dongPinyin: "n̥au³³", mandarinPinyin: "tóu", category: "身体部位", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w071", chinese: "眼睛", dong: "dal", dongPinyin: "ta⁵⁵", mandarinPinyin: "yǎn jing", category: "身体部位", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w072", chinese: "耳朵", dong: "nyac", dongPinyin: "ɲa³⁵", mandarinPinyin: "ěr duo", category: "身体部位", difficulty: 1, toneCode: "35", syllableType: "open" },
+  { id: "w073", chinese: "手", dong: "mux", dongPinyin: "mu⁵⁵", mandarinPinyin: "shǒu", category: "身体部位", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w074", chinese: "脚", dong: "dinl", dongPinyin: "tin¹¹", mandarinPinyin: "jiǎo", category: "身体部位", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w075", chinese: "心", dong: "siml", dongPinyin: "sim¹¹", mandarinPinyin: "xīn", category: "身体部位", difficulty: 1, toneCode: "11", syllableType: "open" },
 
   // 日常动作
-  { id: "w080", chinese: "走", dong: "bail", dongPinyin: "pai˩", mandarinPinyin: "zǒu", category: "日常动作", difficulty: 1 },
-  { id: "w081", chinese: "看", dong: "nyaengx", dongPinyin: "ɲaeŋ˦", mandarinPinyin: "kàn", category: "日常动作", difficulty: 1 },
-  { id: "w082", chinese: "听", dong: "nyinc", dongPinyin: "ɲin˧", mandarinPinyin: "tīng", category: "日常动作", difficulty: 1 },
-  { id: "w083", chinese: "说", dong: "gangx", dongPinyin: "kaŋ˦", mandarinPinyin: "shuō", category: "日常动作", difficulty: 1 },
-  { id: "w084", chinese: "学习", dong: "xuedc sibc", dongPinyin: "ɕuet˧ sip˧", mandarinPinyin: "xué xí", category: "日常动作", difficulty: 1 },
-  { id: "w085", chinese: "工作", dong: "gongx zuox", dongPinyin: "koŋ˦ tsuo˦", mandarinPinyin: "gōng zuò", category: "日常动作", difficulty: 2 },
-  { id: "w086", chinese: "睡觉", dong: "ninx", dongPinyin: "nin˦", mandarinPinyin: "shuì jiào", category: "日常动作", difficulty: 1 },
+  { id: "w080", chinese: "走", dong: "bail", dongPinyin: "pai¹¹", mandarinPinyin: "zǒu", category: "日常动作", difficulty: 1, toneCode: "11", syllableType: "open" },
+  { id: "w081", chinese: "看", dong: "nyaengx", dongPinyin: "ɲaeŋ⁵⁵", mandarinPinyin: "kàn", category: "日常动作", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w082", chinese: "听", dong: "nyinc", dongPinyin: "ɲin³³", mandarinPinyin: "tīng", category: "日常动作", difficulty: 1, toneCode: "33", syllableType: "open" },
+  { id: "w083", chinese: "说", dong: "gangx", dongPinyin: "kaŋ⁵⁵", mandarinPinyin: "shuō", category: "日常动作", difficulty: 1, toneCode: "55", syllableType: "open" },
+  { id: "w084", chinese: "学习", dong: "xuedc sibc", dongPinyin: "ɕuet³³ sip³³", mandarinPinyin: "xué xí", category: "日常动作", difficulty: 1, toneCode: "33", syllableType: "checked" },
+  { id: "w085", chinese: "工作", dong: "gongx zuox", dongPinyin: "koŋ⁵⁵ tsuo⁵⁵", mandarinPinyin: "gōng zuò", category: "日常动作", difficulty: 2, toneCode: "55", syllableType: "open" },
+  { id: "w086", chinese: "睡觉", dong: "ninx", dongPinyin: "nin⁵⁵", mandarinPinyin: "shuì jiào", category: "日常动作", difficulty: 1, toneCode: "55", syllableType: "open" },
 
   // 场所建筑
-  { id: "w090", chinese: "家", dong: "yangh", dongPinyin: "jaŋ˧˥", mandarinPinyin: "jiā", category: "场所建筑", example: "回家", exampleDong: "Bail yangh", difficulty: 1 },
-  { id: "w091", chinese: "学校", dong: "xuedc dangx", dongPinyin: "ɕuet˧ taŋ˦", mandarinPinyin: "xué xiào", category: "场所建筑", difficulty: 1 },
-  { id: "w092", chinese: "寨子", dong: "zail", dongPinyin: "tsai˩", mandarinPinyin: "zhài zi", category: "场所建筑", difficulty: 2 },
-  { id: "w093", chinese: "田", dong: "nasx", dongPinyin: "nas˦", mandarinPinyin: "tián", category: "场所建筑", difficulty: 1 },
-  { id: "w094", chinese: "河", dong: "bail naml", dongPinyin: "pai˩ nam˩", mandarinPinyin: "hé", category: "场所建筑", difficulty: 1 },
+  { id: "w090", chinese: "家", dong: "yangh", dongPinyin: "jaŋ⁴⁵³", mandarinPinyin: "jiā", category: "场所建筑", example: "回家", exampleDong: "Bail yangh", difficulty: 1, toneCode: "453", syllableType: "open" },
+  { id: "w091", chinese: "学校", dong: "xuedc dangx", dongPinyin: "ɕuet³³ taŋ⁵⁵", mandarinPinyin: "xué xiào", category: "场所建筑", difficulty: 1, toneCode: "33", syllableType: "checked" },
+  { id: "w092", chinese: "寨子", dong: "zail", dongPinyin: "tsai¹¹", mandarinPinyin: "zhài zi", category: "场所建筑", difficulty: 2, toneCode: "11", syllableType: "open" },
+  { id: "w093", chinese: "田", dong: "ja", dongPinyin: "ja⁵³", mandarinPinyin: "tián", category: "场所建筑", difficulty: 1, toneCode: "53", syllableType: "open" },
+  { id: "w094", chinese: "河", dong: "bail naml", dongPinyin: "pai¹¹ nam¹¹", mandarinPinyin: "hé", category: "场所建筑", difficulty: 1, toneCode: "11", syllableType: "open" },
 ];
 
 // ========== 词汇分类 ==========
@@ -494,36 +496,38 @@ export const toneInfo: Record<string, { name: string; description: string; examp
 };
 
 /**
- * 根据侗语拼音获取对应的真实音频URL
- * 通过分析IPA声调标记来确定声调类型
+ * 根据声调编号和音节类型获取对应的真实音频URL
+ * 优先使用toneCode字段，其次解析IPA声调符号
  */
-export function getRealAudioUrl(dongPinyin: string): string | null {
-  if (!dongPinyin) return null;
-  
-  // 检测是否为促声（塞音结尾：p/t/k/ʔ）
-  const isChecked = /[ptk]\s*$|[ptk][˦˧˩˥]/.test(dongPinyin) || 
-    dongPinyin.includes("˧") && /[ptk]/.test(dongPinyin.split(/\s+/).pop() || "");
-  
-  // 从IPA中提取声调数字
-  let toneKey = "";
-  if (dongPinyin.includes("˦˦") || dongPinyin.includes("55")) toneKey = "55";
-  else if (dongPinyin.includes("˧˥") || dongPinyin.includes("35")) toneKey = "35";
-  else if (dongPinyin.includes("˩˩") || dongPinyin.includes("11")) toneKey = "11";
-  else if (dongPinyin.includes("˧˩˧") || dongPinyin.includes("323")) toneKey = "323";
-  else if (dongPinyin.includes("˩˧") || dongPinyin.includes("13")) toneKey = "13";
-  else if (dongPinyin.includes("˧˩") || dongPinyin.includes("31")) toneKey = "31";
-  else if (dongPinyin.includes("˥˧") || dongPinyin.includes("53")) toneKey = "53";
-  else if (dongPinyin.includes("453")) toneKey = "453";
-  else if (dongPinyin.includes("˧˧") || dongPinyin.includes("33")) toneKey = "33";
-  // 单个声调符号的情况
-  else if (dongPinyin.includes("˦")) toneKey = "55";
-  else if (dongPinyin.includes("˧")) toneKey = "33";
-  else if (dongPinyin.includes("˩")) toneKey = "11";
-  
+export function getRealAudioUrl(
+  dongPinyin: string,
+  toneCode?: string,
+  syllableType?: "open" | "checked"
+): string | null {
+  let toneKey = toneCode || "";
+  let sylType = syllableType || "open";
+
+  // 如果没有toneCode，尝试从IPA中解析
+  if (!toneKey && dongPinyin) {
+    // 检测促声（以p/t/k结尾的音节）
+    const lastSyl = dongPinyin.split(/\s+/).pop() || "";
+    if (/[ptk]\d/.test(lastSyl) || /[ptk]$/.test(lastSyl.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, ""))) {
+      sylType = "checked";
+    }
+    // 从上标数字解析声调
+    const toneMatch = dongPinyin.match(/([¹²³⁴⁵]{2,3})/);
+    if (toneMatch) {
+      const map: Record<string, string> = {
+        "⁵⁵": "55", "³⁵": "35", "¹¹": "11", "³²³": "323",
+        "¹³": "13", "³¹": "31", "⁵³": "53", "⁴⁵³": "453", "³³": "33"
+      };
+      toneKey = map[toneMatch[1]] || "";
+    }
+  }
+
   if (!toneKey) return null;
-  
-  const syllableType = isChecked ? "checked" : "open";
-  const key = `tone_${toneKey}_${syllableType}`;
+
+  const key = `tone_${toneKey}_${sylType}`;
   return REAL_AUDIO_CDN[key] || REAL_AUDIO_CDN[`tone_${toneKey}_open`] || null;
 }
 
@@ -597,14 +601,27 @@ export function speakDong(dongText: string, dongPinyin?: string): boolean {
     currentAudio = null;
   }
   
-  // 查找词汇获取侗语拼音
-  let pinyin = dongPinyin;
-  if (!pinyin) {
-    const word = dongDictionary.find(w => w.dong === dongText || w.chinese === dongText);
-    if (word) pinyin = word.dongPinyin;
+  // 查找词汇，优先使用toneCode字段
+  const word = dongDictionary.find(w => w.dong === dongText || w.chinese === dongText);
+  let pinyin = dongPinyin || (word ? word.dongPinyin : undefined);
+  const toneCode = word?.toneCode;
+  const syllableType = word?.syllableType;
+  
+  // 优先使用真实音频（通过toneCode直接匹配）
+  if (toneCode) {
+    const audioUrl = getRealAudioUrl(pinyin || "", toneCode, syllableType);
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.volume = 1.0;
+      currentAudio = audio;
+      audio.play().catch(() => {
+        speakDongFallback(dongText, pinyin);
+      });
+      return true;
+    }
   }
   
-  // 优先使用真实音频
+  // 如果没有toneCode，尝试通过IPA解析
   if (pinyin) {
     const audioUrl = getRealAudioUrl(pinyin);
     if (audioUrl) {
@@ -612,8 +629,7 @@ export function speakDong(dongText: string, dongPinyin?: string): boolean {
       audio.volume = 1.0;
       currentAudio = audio;
       audio.play().catch(() => {
-        // 音频播放失败时回退到语音合成
-        speakDongFallback(dongText, pinyin!);
+        speakDongFallback(dongText, pinyin);
       });
       return true;
     }

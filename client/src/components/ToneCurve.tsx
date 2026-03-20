@@ -7,6 +7,8 @@ import { useMemo } from "react";
 
 interface ToneCurveProps {
   dongPinyin: string;
+  toneCode?: string;   // 直接传入声调编号，优先于解析dongPinyin
+  syllableType?: "open" | "checked";
   size?: "sm" | "md" | "lg";
   animated?: boolean;
   className?: string;
@@ -25,40 +27,75 @@ interface TonePoint {
   isRu: boolean; // 是否入声（短促）
 }
 
+// 声调编号到声调点的映射表
+const toneCodeMap: Record<string, TonePoint> = {
+  "55":  { start: 4, end: 4, label: "高平", color: "#ef4444", isRu: false },
+  "35":  { start: 2, end: 4, label: "中升", color: "#4ade80", isRu: false },
+  "11":  { start: 0, end: 0, label: "低平", color: "#3b82f6", isRu: false },
+  "323": { start: 2, end: 2, label: "曲折", color: "#8b5cf6", isRu: false },  // 特殊处理
+  "13":  { start: 0, end: 2, label: "低升", color: "#60a5fa", isRu: false },
+  "31":  { start: 2, end: 0, label: "中降", color: "#fb923c", isRu: false },
+  "53":  { start: 4, end: 2, label: "高降", color: "#f87171", isRu: false },
+  "453": { start: 3, end: 2, label: "升降", color: "#d35400", isRu: false },  // 特殊处理
+  "33":  { start: 2, end: 2, label: "中平", color: "#f59e0b", isRu: false },
+};
+
+// 上标数字到声调编号的映射
+const superscriptToneMap: Record<string, string> = {
+  "⁵⁵": "55", "³⁵": "35", "¹¹": "11", "³²³": "323",
+  "¹³": "13", "³¹": "31", "⁵³": "53", "⁴⁵³": "453", "³³": "33"
+};
+
+function parseToneFromCode(code: string, isRu = false): TonePoint {
+  const base = toneCodeMap[code];
+  if (!base) return { start: 2, end: 2, label: "中平", color: "#f59e0b", isRu };
+  return { ...base, isRu };
+}
+
 function parseTone(syllable: string): TonePoint {
   const s = syllable.trim();
-  
-  // 中升调 ˧˥ (35)
+
+  // 促声判断（以p/t/k结尾）
+  const baseClean = s.replace(/[¹²³⁴⁵˦˧˩˥]/g, "");
+  const isRu = /[ptk]$/.test(baseClean);
+
+  // 优先尝试上标数字格式（⁵⁵/³¹/¹¹等）
+  const superMatch = s.match(/(⁴⁵³|[¹²³⁴⁵]{2,3})/);
+  if (superMatch) {
+    const code = superscriptToneMap[superMatch[1]];
+    if (code) return parseToneFromCode(code, isRu);
+  }
+
+  // 其次尝试老格式 IPA声调符号
   if (s.includes("˧˥")) return { start: 2, end: 4, label: "中升", color: "#4ade80", isRu: false };
-  // 低升调 ˩˧ (13)
   if (s.includes("˩˧")) return { start: 0, end: 2, label: "低升", color: "#60a5fa", isRu: false };
-  // 高降调 ˦˩ (51)
   if (s.includes("˦˩")) return { start: 4, end: 0, label: "高降", color: "#f87171", isRu: false };
-  // 中降调 ˧˩ (31)
   if (s.includes("˧˩")) return { start: 2, end: 0, label: "中降", color: "#fb923c", isRu: false };
-  
-  // 入声判断（含塞音尾 p, t, k）
-  const baseClean = s.replace(/[˦˧˩˥]/g, "");
-  const isRu = /[ptk]$/.test(baseClean) || /[ptk]˧/.test(s) || /[ptk]˦/.test(s) || /[ptk]˩/.test(s);
-  
-  // 高平调 ˦ (55)
   if (s.includes("˦")) return { start: 4, end: 4, label: isRu ? "高入" : "高平", color: "#ef4444", isRu };
-  // 中平调 ˧ (33)
   if (s.includes("˧")) return { start: 2, end: 2, label: isRu ? "中入" : "中平", color: "#f59e0b", isRu };
-  // 低调 ˩ (11)
   if (s.includes("˩")) return { start: 0, end: 0, label: isRu ? "低入" : "低平", color: "#3b82f6", isRu };
-  
-  // 默认中平
+
   return { start: 2, end: 2, label: "中平", color: "#f59e0b", isRu: false };
 }
 
-function parseSyllables(dongPinyin: string): { syllable: string; tone: TonePoint }[] {
-  // 按空格分割音节
+function parseSyllables(dongPinyin: string, toneCode?: string, syllableType?: "open" | "checked"): { syllable: string; tone: TonePoint }[] {
   const parts = dongPinyin.trim().split(/\s+/);
-  return parts.map(part => ({
-    syllable: part.replace(/[˦˧˩˥]/g, "").replace(/:/g, ""),
-    tone: parseTone(part),
-  }));
+  const isRu = syllableType === "checked";
+
+  return parts.map((part, i) => {
+    // 对于单音节词，使用toneCode直接匹配
+    if (toneCode && parts.length === 1) {
+      return {
+        syllable: part.replace(/[¹²³⁴⁵˦˧˩˥]/g, "").replace(/:/g, ""),
+        tone: parseToneFromCode(toneCode, isRu),
+      };
+    }
+    // 对于多音节词，每个音节都从其IPA音标中解析声调（不使用toneCode）
+    return {
+      syllable: part.replace(/[¹²³⁴⁵˦˧˩˥]/g, "").replace(/:/g, ""),
+      tone: parseTone(part),
+    };
+  });
 }
 
 const sizeConfig = {
@@ -67,8 +104,8 @@ const sizeConfig = {
   lg: { width: 100, height: 44, fontSize: 10, lineWidth: 2.5, dotR: 3 },
 };
 
-export default function ToneCurve({ dongPinyin, size = "md", animated = true, className = "" }: ToneCurveProps) {
-  const syllables = useMemo(() => parseSyllables(dongPinyin), [dongPinyin]);
+export default function ToneCurve({ dongPinyin, toneCode, syllableType, size = "md", animated = true, className = "" }: ToneCurveProps) {
+  const syllables = useMemo(() => parseSyllables(dongPinyin, toneCode, syllableType), [dongPinyin, toneCode, syllableType]);
   const cfg = sizeConfig[size];
   
   const totalWidth = syllables.length * cfg.width + 8;
@@ -211,8 +248,8 @@ export default function ToneCurve({ dongPinyin, size = "md", animated = true, cl
 /**
  * 紧凑版声调标签 - 用于词汇列表中的内联显示
  */
-export function ToneBadge({ dongPinyin, className = "" }: { dongPinyin: string; className?: string }) {
-  const syllables = useMemo(() => parseSyllables(dongPinyin), [dongPinyin]);
+export function ToneBadge({ dongPinyin, toneCode, syllableType, className = "" }: { dongPinyin: string; toneCode?: string; syllableType?: "open" | "checked"; className?: string }) {
+  const syllables = useMemo(() => parseSyllables(dongPinyin, toneCode, syllableType), [dongPinyin, toneCode, syllableType]);
   
   return (
     <div className={`inline-flex items-center gap-0.5 ${className}`}>
