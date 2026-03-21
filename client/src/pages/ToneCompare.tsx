@@ -11,8 +11,23 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ToneCurve from "@/components/ToneCurve";
 import { speakDong, speakChinese } from "@/lib/dongData";
+import { DONG_TONE_GROUPS, playToneWord, stopCurrentAudio } from "@/lib/dongToneData";
 
-// ========== 侗语声调系统说明 ==========
+/// ========== 声调系统说明 ==========
+// 声调卡片与真实录音的映射（使用dongToneData中第一个词的音频）
+// 注：ToneCompare使用旧声调值，需映射到实际音频文件名
+const toneAudioMap: Record<string, string> = {
+  "55": "/audio/55s_1_bal.wav",    // 高平调 55
+  "35": "/audio/35s_1_taemk.wav",  // 中升调 35
+  "33": "/audio/33s_1_jah.wav",    // 中平调 33
+  "21": "/audio/11s_1_tang.wav",   // 低平调 11（旧标记21）
+  "51": "/audio/53s_1_baenv.wav",  // 高降调 53（旧标记51）
+  "13": "/audio/13s_1_thenl.wav",  // 低升调 13
+  "55p": "/audio/55c_1_badl.wav",  // 高入声 55促
+  "33p": "/audio/323c_1_beds.wav", // 中入声（用323促调代替）
+  "11p": "/audio/11c_1_jogc.wav",  // 低入声 11促
+};
+
 const toneSystem = [
   { id: "t1", name: "高平调", value: "55", symbol: "˦", pitch: [5, 5], color: "#ef4444", desc: "声调高而平稳，从头到尾保持在最高音区", example: "bux (父亲)" },
   { id: "t2", name: "中升调", value: "35", symbol: "˧˥", pitch: [3, 5], color: "#4ade80", desc: "从中音区起，逐渐升高到高音区", example: "yangh (家)" },
@@ -178,6 +193,20 @@ export default function ToneCompare() {
     speakDong(dong, pinyin);
     setTimeout(() => setPlayingId(null), 1500);
   }, []);
+
+  // 播放声调卡片真实录音
+  const handlePlayToneCard = useCallback((toneValue: string, id: string) => {
+    if (playingId === id) {
+      stopCurrentAudio();
+      setPlayingId(null);
+      return;
+    }
+    const audioPath = toneAudioMap[toneValue];
+    if (audioPath) {
+      setPlayingId(id);
+      playToneWord(audioPath, () => setPlayingId(null));
+    }
+  }, [playingId]);
 
   const handlePlayChinese = useCallback((text: string, id: string) => {
     setPlayingId(id);
@@ -535,8 +564,10 @@ export default function ToneCompare() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="bg-white rounded-xl p-4 border hover:shadow-md transition-all"
-                      style={{ borderColor: `${tone.color}25` }}
+                      className={`bg-white rounded-xl p-4 border hover:shadow-md transition-all cursor-pointer select-none
+                        ${playingId === `tone-card-${tone.id}` ? "shadow-lg scale-[1.02]" : ""}`}
+                      style={{ borderColor: playingId === `tone-card-${tone.id}` ? tone.color : `${tone.color}25` }}
+                      onClick={() => handlePlayToneCard(tone.value, `tone-card-${tone.id}`)}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: `${tone.color}15`, color: tone.color }}>
@@ -573,6 +604,16 @@ export default function ToneCompare() {
                       </p>
                       <div className="text-xs font-mono" style={{ color: "#3a3a6e", opacity: 0.5 }}>
                         例: {tone.example}
+                      </div>
+                      {/* 点击播放提示 */}
+                      <div className="flex items-center justify-center gap-1 mt-2 pt-2 border-t" style={{ borderColor: `${tone.color}20` }}>
+                        <Volume2
+                          className={`w-3.5 h-3.5 ${playingId === `tone-card-${tone.id}` ? "animate-pulse" : ""}`}
+                          style={{ color: tone.color }}
+                        />
+                        <span className="text-[10px] font-medium" style={{ color: tone.color }}>
+                          {playingId === `tone-card-${tone.id}` ? "播放中…" : "点击试听"}
+                        </span>
                       </div>
                     </motion.div>
                   ))}
