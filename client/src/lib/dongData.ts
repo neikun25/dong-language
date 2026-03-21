@@ -3,6 +3,8 @@
  * 包含侗语词汇、分类、课程、文化知识等
  */
 
+import { ALL_TONE_WORDS } from "./dongToneData";
+
 // ========== 词汇数据 ==========
 export interface DongWord {
   id: string;
@@ -590,9 +592,16 @@ const dongSyllableMap: Record<string, string> = {
 
 /**
  * 侗语发音函数
- * 优先使用田野调查真实音频，无音频时使用语音合成近似
+ * 优先使用dongToneData中的独立单词音频，找不到时回退到语音合成
  */
+
 let currentAudio: HTMLAudioElement | null = null;
+
+// 静态构建侗语拼写 -> 音频路径的映射表
+const DONG_AUDIO_INDEX: Map<string, string> = new Map();
+for (const w of ALL_TONE_WORDS) {
+  DONG_AUDIO_INDEX.set(w.dong.toLowerCase(), w.audioPath);
+}
 
 export function speakDong(dongText: string, dongPinyin?: string): boolean {
   // 停止当前播放
@@ -600,42 +609,27 @@ export function speakDong(dongText: string, dongPinyin?: string): boolean {
     currentAudio.pause();
     currentAudio = null;
   }
-  
-  // 查找词汇，优先使用toneCode字段
+
+  // 第一优先：从 dongToneData 中按侗语拼写精确匹配独立单词音频
+  // 支持多音节（取第一个音节匹配）
+  const firstSyllable = dongText.trim().split(/\s+/)[0].toLowerCase();
+  const audioPath = DONG_AUDIO_INDEX.get(firstSyllable) || DONG_AUDIO_INDEX.get(dongText.toLowerCase());
+  if (audioPath) {
+    const audio = new Audio(audioPath);
+    audio.volume = 1.0;
+    currentAudio = audio;
+    audio.play().catch(() => {
+      const word = dongDictionary.find(w => w.dong === dongText || w.chinese === dongText);
+      const pinyin = dongPinyin || (word ? word.dongPinyin : undefined);
+      speakDongFallback(dongText, pinyin);
+    });
+    audio.onended = () => { currentAudio = null; };
+    return true;
+  }
+
+  // 回退到语音合成（不再播放整段CDN录音）
   const word = dongDictionary.find(w => w.dong === dongText || w.chinese === dongText);
-  let pinyin = dongPinyin || (word ? word.dongPinyin : undefined);
-  const toneCode = word?.toneCode;
-  const syllableType = word?.syllableType;
-  
-  // 优先使用真实音频（通过toneCode直接匹配）
-  if (toneCode) {
-    const audioUrl = getRealAudioUrl(pinyin || "", toneCode, syllableType);
-    if (audioUrl) {
-      const audio = new Audio(audioUrl);
-      audio.volume = 1.0;
-      currentAudio = audio;
-      audio.play().catch(() => {
-        speakDongFallback(dongText, pinyin);
-      });
-      return true;
-    }
-  }
-  
-  // 如果没有toneCode，尝试通过IPA解析
-  if (pinyin) {
-    const audioUrl = getRealAudioUrl(pinyin);
-    if (audioUrl) {
-      const audio = new Audio(audioUrl);
-      audio.volume = 1.0;
-      currentAudio = audio;
-      audio.play().catch(() => {
-        speakDongFallback(dongText, pinyin);
-      });
-      return true;
-    }
-  }
-  
-  // 回退到语音合成
+  const pinyin = dongPinyin || (word ? word.dongPinyin : undefined);
   return speakDongFallback(dongText, pinyin);
 }
 
