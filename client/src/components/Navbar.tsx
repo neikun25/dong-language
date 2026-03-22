@@ -15,12 +15,10 @@ const LOGO_CDN = "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5
 
 const navItems = [
   { label: "首页", path: "/" },
-  { label: "侗语纠音", path: "/pronunciation" },
-  { label: "普通话纠音", path: "/mandarin-pronunciation" },
-  { label: "普通话学习", path: "/mandarin-learn" },
   { label: "侗语学习", path: "/dong-learn" },
+  { label: "普通话学习", path: "/mandarin-learn" },
   { label: "声调练习", path: "/tone-compare" },
-  { label: "田野录音", path: "/field-data" },
+  { label: "侗语音系", path: "/field-data" },
   { label: "侗族文化", path: "/culture" },
   { label: "留言反馈", path: "/message" },
 ];

@@ -303,7 +303,10 @@ export function playToneWord(audioPath: string, onEnd?: () => void): void {
     currentAudio.onended = null;
     currentAudio = null;
   }
-  const audio = new Audio(audioPath);
+  // 使用BASE_URL前缀适配GitHub Pages子目录部署
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const fullPath = audioPath.startsWith('/') ? base + audioPath : audioPath;
+  const audio = new Audio(fullPath);
   currentAudio = audio;
   audio.play().catch(() => {});
   if (onEnd) {

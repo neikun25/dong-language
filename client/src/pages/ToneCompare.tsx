@@ -124,7 +124,7 @@ function WordCard({ word, isPlaying, onPlay, color }: { word: ToneWord; isPlayin
       className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all hover:shadow-md select-none
         ${isPlaying ? "shadow-lg scale-[1.03]" : ""}`}
       style={{ borderColor: isPlaying ? color : `${color}30` }}
-      onClick={onPlay}
+      onClick={(e) => { e.stopPropagation(); e.preventDefault(); onPlay(); }}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex-1 min-w-0">
@@ -523,7 +523,7 @@ export default function ToneCompare() {
                       className={`bg-white rounded-xl p-4 border hover:shadow-md transition-all cursor-pointer select-none
                         ${playingId === `tone-card-${tone.toneCode}` ? "shadow-lg scale-[1.02]" : ""}`}
                       style={{ borderColor: playingId === `tone-card-${tone.toneCode}` ? tone.color : `${tone.color}25` }}
-                      onClick={() => handlePlayToneCard(tone.audioPath, `tone-card-${tone.toneCode}`)}
+                      onClick={(e) => { e.stopPropagation(); e.preventDefault(); handlePlayToneCard(tone.audioPath, `tone-card-${tone.toneCode}`); }}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ backgroundColor: `${tone.color}15`, color: tone.color }}>
