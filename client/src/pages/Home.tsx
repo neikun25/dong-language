@@ -4,7 +4,7 @@
  */
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { Search, Volume2, BookOpen, Mic, MessageSquare, Globe, Star, TrendingUp, ChevronRight, Music } from "lucide-react";
+import { Search, Volume2, BookOpen, Mic, MessageSquare, Globe, Star, ChevronRight, Music } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
@@ -46,7 +46,6 @@ export default function Home() {
     { icon: Music, label: "声调练习", desc: "对比学习侗语声调", path: "/tone-compare", color: "bg-indigo-50 text-indigo-600 border-indigo-100" },
     { icon: Star, label: "侗族文化", desc: "探索侗族文化瑰宝", path: "/culture", color: "bg-amber-50 text-amber-600 border-amber-100" },
     { icon: MessageSquare, label: "留言交流", desc: "分享学习心得", path: "/message", color: "bg-rose-50 text-rose-600 border-rose-100" },
-    { icon: TrendingUp, label: "学习记录", desc: "查看学习进度", path: "/profile", color: "bg-teal-50 text-teal-600 border-teal-100" },
   ];
 
   return (
@@ -213,9 +212,7 @@ export default function Home() {
         <div className="max-w-[1100px] mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-serif text-dong-indigo font-bold">学习概览</h2>
-            <Link href="/profile" className="text-sm text-dong-rose hover:text-dong-indigo flex items-center gap-1 transition-colors">
-              查看详情 <ChevronRight className="w-4 h-4" />
-            </Link>
+            <span />
           </div>
           <div className="grid md:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">

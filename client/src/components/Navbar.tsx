@@ -23,7 +23,6 @@ const navItems = [
   { label: "田野录音", path: "/field-data" },
   { label: "侗族文化", path: "/culture" },
   { label: "留言反馈", path: "/message" },
-  { label: "个人中心", path: "/profile" },
 ];
 
 export default function Navbar() {

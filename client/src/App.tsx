@@ -12,7 +12,6 @@ import Message from "./pages/Message";
 import Culture from "./pages/Culture";
 import DongLearn from "./pages/DongLearn";
 import MandarinLearn from "./pages/MandarinLearn";
-import Profile from "./pages/Profile";
 import ToneCompare from "./pages/ToneCompare";
 import FieldData from "./pages/FieldData";
 
@@ -37,7 +36,6 @@ function Router() {
         <Route path="/culture" component={Culture} />
         <Route path="/dong-learn" component={DongLearn} />
         <Route path="/mandarin-learn" component={MandarinLearn} />
-        <Route path="/profile" component={Profile} />
         <Route path="/tone-compare" component={ToneCompare} />
         <Route path="/field-data" component={FieldData} />
         <Route path="/404" component={NotFound} />
