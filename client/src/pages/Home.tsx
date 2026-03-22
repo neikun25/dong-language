@@ -10,7 +10,7 @@ import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { dongDictionary, dongLessons, getProgress, speakText, speakDong, speakDongByChinese, searchWords, type DongWord } from "@/lib/dongData";
+import { dongDictionary, dongLessons, speakText, speakDong, speakDongByChinese, searchWords, type DongWord } from "@/lib/dongData";
 import PronunciationDetail, { InlinePronunciationGuide } from "@/components/PronunciationDetail";
 import { ToneBadge } from "@/components/ToneCurve";
 
@@ -18,12 +18,7 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
   const [results, setResults] = useState<DongWord[]>([]);
   const [searched, setSearched] = useState(false);
-  const [progress, setProgress] = useState(getProgress());
   const [detailWord, setDetailWord] = useState<DongWord | null>(null);
-
-  useEffect(() => {
-    setProgress(getProgress());
-  }, []);
 
   const handleSearch = () => {
     const trimmed = searchText.trim();
@@ -207,43 +202,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Learning Progress Section */}
-      <section className="py-10 px-4">
-        <div className="max-w-[1100px] mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-serif text-dong-indigo font-bold">学习概览</h2>
-            <span />
-          </div>
-          <div className="grid md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
-              <p className="text-xs text-dong-light mb-1">已学词汇</p>
-              <p className="text-2xl font-bold text-dong-indigo">{progress.learnedWords.length}</p>
-              <div className="w-full bg-dong-cream rounded-full h-1.5 mt-2">
-                <div className="bg-dong-indigo h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, (progress.learnedWords.length / dongDictionary.length) * 100)}%` }} />
-              </div>
-              <p className="text-[10px] text-dong-light mt-1">共 {dongDictionary.length} 个词汇</p>
-            </div>
-            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
-              <p className="text-xs text-dong-light mb-1">已完成课程</p>
-              <p className="text-2xl font-bold text-dong-rose">{progress.completedLessons.length}</p>
-              <div className="w-full bg-dong-cream rounded-full h-1.5 mt-2">
-                <div className="bg-dong-rose h-1.5 rounded-full transition-all" style={{ width: `${Math.min(100, (progress.completedLessons.length / dongLessons.length) * 100)}%` }} />
-              </div>
-              <p className="text-[10px] text-dong-light mt-1">共 {dongLessons.length} 节课程</p>
-            </div>
-            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
-              <p className="text-xs text-dong-light mb-1">收藏词汇</p>
-              <p className="text-2xl font-bold text-dong-gold">{progress.favorites.length}</p>
-              <p className="text-[10px] text-dong-light mt-3">随时复习收藏的词汇</p>
-            </div>
-            <div className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm">
-              <p className="text-xs text-dong-light mb-1">连续学习</p>
-              <p className="text-2xl font-bold text-green-600">{progress.streak} <span className="text-sm font-normal">天</span></p>
-              <p className="text-[10px] text-dong-light mt-3">坚持每天学习</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Hot Courses */}
       <section className="py-10 px-4 bg-white/60">
@@ -256,7 +214,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
             {dongLessons.slice(0, 5).map((lesson) => {
-              const isCompleted = progress.completedLessons.includes(lesson.id);
+              const isCompleted = false;
               return (
                 <Link key={lesson.id} href="/dong-learn">
                   <div className="bg-white rounded-xl p-4 border border-dong-indigo/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all h-full">
