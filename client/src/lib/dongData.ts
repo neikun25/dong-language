@@ -20,7 +20,21 @@ export interface DongWord {
   syllableType?: "open" | "checked"; // 舒声/促声
 }
 
-export const dongDictionary: DongWord[] = [
+// 从字表词汇动态构建 dongDictionary（只包含有真实录音的75个词）
+export const dongDictionary: DongWord[] = ALL_TONE_WORDS.map((w, i) => ({
+  id: `zt${String(i + 1).padStart(3, '0')}`,
+  chinese: w.chinese,
+  dong: w.dong,
+  dongPinyin: w.ipa,
+  mandarinPinyin: "",
+  category: `${w.toneCode}${w.syllableType === '舒' ? '调' : '促'}`,
+  difficulty: 1 as 1 | 2 | 3,
+  toneCode: w.toneCode,
+  syllableType: w.syllableType === '舒' ? 'open' : 'checked' as 'open' | 'checked',
+}));
+
+// 旧版词典（保留以防其他地方引用，实际已被上方字表词典替代）
+const _oldDongDictionary_unused: DongWord[] = [
   // 日常问候
   { id: "w001", chinese: "你好", dong: "mii laox", dongPinyin: "mi³³ lau⁵⁵", mandarinPinyin: "nǐ hǎo", category: "日常问候", example: "你好，朋友！", exampleDong: "Mii laox, bioul nyenc!", difficulty: 1, toneCode: "33", syllableType: "open" },
   { id: "w002", chinese: "谢谢", dong: "laox siik", dongPinyin: "lau⁵⁵ sik³³", mandarinPinyin: "xiè xie", category: "日常问候", example: "谢谢你的帮助", exampleDong: "Laox siik mii bangc", difficulty: 1, toneCode: "55", syllableType: "open" },
@@ -109,6 +123,7 @@ export const dongDictionary: DongWord[] = [
   { id: "w093", chinese: "田", dong: "ja", dongPinyin: "ja⁵³", mandarinPinyin: "tián", category: "场所建筑", difficulty: 1, toneCode: "53", syllableType: "open" },
   { id: "w094", chinese: "河", dong: "bail naml", dongPinyin: "pai¹¹ nam¹¹", mandarinPinyin: "hé", category: "场所建筑", difficulty: 1, toneCode: "11", syllableType: "open" },
 ];
+// 旧版词典结束
 
 // ========== 词汇分类 ==========
 export const categories = [
@@ -615,7 +630,10 @@ export function speakDong(dongText: string, dongPinyin?: string): boolean {
   const firstSyllable = dongText.trim().split(/\s+/)[0].toLowerCase();
   const audioPath = DONG_AUDIO_INDEX.get(firstSyllable) || DONG_AUDIO_INDEX.get(dongText.toLowerCase());
   if (audioPath) {
-    const audio = new Audio(audioPath);
+    // 使用BASE_URL前缀适配GitHub Pages子目录部署
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const fullPath = audioPath.startsWith('/') ? base + audioPath : audioPath;
+    const audio = new Audio(fullPath);
     audio.volume = 1.0;
     currentAudio = audio;
     audio.play().catch(() => {

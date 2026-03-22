@@ -14,22 +14,30 @@ import { dongDictionary, speakText, speakDong, speakDongByChinese, searchWords }
 import ToneCurve, { ToneBadge } from "@/components/ToneCurve";
 import MouthShape from "@/components/MouthShape";
 
-const dongPronData: Record<string, { dongPinyin: string; tips: string[]; toneGuide: string; commonMistakes: string[] }> = {
-  "你好": { dongPinyin: "mii laox", tips: ["'mii'发音短促，高平调", "'laox'中升调，注意鼻音"], toneGuide: "高平调+中升调", commonMistakes: ["声调不稳定", "鼻音不够明显"] },
-  "谢谢": { dongPinyin: "laox siik", tips: ["'laox'中升调", "'siik'入声，短促有力"], toneGuide: "中升调+入声", commonMistakes: ["入声不够短促", "声调偏高"] },
-  "鼓楼": { dongPinyin: "gul laox", tips: ["'gul'低调，浊辅音开头", "'laox'中升调"], toneGuide: "低调+中升调", commonMistakes: ["'g'清浊不分", "低调不够低"] },
-  "大歌": { dongPinyin: "al laox", tips: ["'al'低平调", "'laox'中升调，两个音节都要饱满"], toneGuide: "低平调+中升调", commonMistakes: ["低平调偏高", "音节不够饱满"] },
-  "吃饭": { dongPinyin: "nyaoc jax", tips: ["'nyaoc'鼻音开头，注意ny-的发音", "'jax'入声"], toneGuide: "中调+入声", commonMistakes: ["ny-鼻音不到位", "入声丢失"] },
-  "朋友": { dongPinyin: "bioul nyenc", tips: ["'bioul'双元音要完整", "'nyenc'鼻音韵尾"], toneGuide: "低调+中调", commonMistakes: ["双元音不完整", "鼻音韵尾丢失"] },
-  "唱歌": { dongPinyin: "al gal", tips: ["两个低调音节", "注意'g'的浊辅音发音"], toneGuide: "低调+低调", commonMistakes: ["声调不够低", "清浊不分"] },
-  "家": { dongPinyin: "yangh", tips: ["中升调", "鼻音韵尾-ng要完整"], toneGuide: "中升调", commonMistakes: ["鼻音韵尾不完整", "声调偏平"] },
-  "山": { dongPinyin: "bya", tips: ["浊辅音b-开头", "低调"], toneGuide: "低调", commonMistakes: ["b-发成p-", "声调偏高"] },
-  "水": { dongPinyin: "naml", tips: ["低调入声", "鼻音开头"], toneGuide: "低调入声", commonMistakes: ["入声不够短促", "鼻音不明显"] },
-  "太阳": { dongPinyin: "wenc nyiedl", tips: ["'wenc'中调，鼻音韵尾", "'nyiedl'低调入声"], toneGuide: "中调+低调入声", commonMistakes: ["韵尾不完整", "入声丢失"] },
-  "月亮": { dongPinyin: "laox nyiedl", tips: ["'laox'中升调", "'nyiedl'低调入声"], toneGuide: "中升调+低调入声", commonMistakes: ["声调组合不准", "入声不到位"] },
-};
+// 使用字表词汇构建练习词汇和发音提示数据
+import { ALL_TONE_WORDS } from "@/lib/dongToneData";
 
-const practiceWords = ["你好", "谢谢", "鼓楼", "大歌", "吃饭", "朋友", "唱歌", "家", "山", "水", "太阳", "月亮"];
+const dongPronData: Record<string, { dongPinyin: string; tips: string[]; toneGuide: string; commonMistakes: string[] }> = 
+  Object.fromEntries(
+    ALL_TONE_WORDS.map(w => [
+      w.chinese,
+      {
+        dongPinyin: w.dong,
+        tips: [
+          `声调为${w.toneCode}（${w.toneCode === '55' ? '高平调' : w.toneCode === '35' ? '中升调' : w.toneCode === '11' ? '低平调' : w.toneCode === '323' ? '曲折调' : w.toneCode === '13' ? '低升调' : w.toneCode === '31' ? '中降调' : w.toneCode === '53' ? '高降调' : w.toneCode === '453' ? '升降调' : '中平调'}）`,
+          `IPA音标：${w.ipa}`,
+          w.syllableType === '促' ? '促声词，音节短促有力' : '舒声词，音节平稳舒展',
+        ],
+        toneGuide: `${w.toneCode}调（${w.syllableType}声）`,
+        commonMistakes: [
+          '声调高低不准确',
+          '音节起止不清晰',
+        ],
+      }
+    ])
+  );
+
+const practiceWords = ALL_TONE_WORDS.slice(0, 12).map(w => w.chinese);
 
 export default function Pronunciation() {
   const [inputText, setInputText] = useState("");

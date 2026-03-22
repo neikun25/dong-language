@@ -13,6 +13,10 @@ import { toast } from "sonner";
 import { dongDictionary, dongLessons, speakText, speakDong, speakDongByChinese, searchWords, type DongWord } from "@/lib/dongData";
 import PronunciationDetail, { InlinePronunciationGuide } from "@/components/PronunciationDetail";
 import { ToneBadge } from "@/components/ToneCurve";
+import { ALL_TONE_WORDS } from "@/lib/dongToneData";
+
+// 热门搜索词汇（取字表前12个词）
+const HOT_SEARCH_WORDS = ALL_TONE_WORDS.slice(0, 9).map(w => w.chinese);
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
@@ -185,7 +189,7 @@ export default function Home() {
                 <div className="bg-dong-cream/40 rounded-lg p-5 border border-dong-indigo/10">
                   <p className="text-sm text-dong-light mb-3">热门搜索：</p>
                   <div className="flex flex-wrap gap-2">
-                    {["你好", "谢谢", "鼓楼", "大歌", "吃饭", "朋友", "唱歌", "山", "水"].map((w) => (
+                    {HOT_SEARCH_WORDS.map((w) => (
                       <button
                         key={w}
                         onClick={() => { setSearchText(w); const found = searchWords(w); setSearched(true); setResults(found); }}
