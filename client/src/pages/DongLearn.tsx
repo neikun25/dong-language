@@ -17,11 +17,13 @@ import {
   TONE_NAMES,
   playToneWord,
   stopCurrentAudio,
+  getAudioPathForSpeaker,
+  SPEAKERS,
   type ToneWord,
   type ToneGroup,
+  ALL_TONE_WORDS,
 } from "@/lib/dongToneData";
 import { dongDictionary, speakText, speakDong, speakDongByChinese, searchWords } from "@/lib/dongData";
-import { ALL_TONE_WORDS } from "@/lib/dongToneData";
 import ToneCurve, { ToneBadge } from "@/components/ToneCurve";
 import MouthShape from "@/components/MouthShape";
 
@@ -58,10 +60,12 @@ function WordCard({
   word,
   isPlaying,
   onPlay,
+  speakerId,
 }: {
   word: ToneWord;
   isPlaying: boolean;
   onPlay: () => void;
+  speakerId?: string;
 }) {
   const color = TONE_COLORS[word.toneCode] || "#3a3a6e";
 
@@ -113,7 +117,7 @@ function WordCard({
 }
 
 // ===== 声调组卡片 =====
-function ToneGroupCard({ group }: { group: ToneGroup }) {
+function ToneGroupCard({ group, speakerId }: { group: ToneGroup; speakerId: string }) {
   const [expanded, setExpanded] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const color = group.color;
@@ -125,7 +129,8 @@ function ToneGroupCard({ group }: { group: ToneGroup }) {
       return;
     }
     setPlayingId(word.id);
-    playToneWord(word.audioPath, () => setPlayingId(null));
+    const audioPath = getAudioPathForSpeaker(word.audioPath, speakerId);
+    playToneWord(audioPath, () => setPlayingId(null));
   }
 
   function handleHeaderClick() {
@@ -218,6 +223,7 @@ function ToneGroupCard({ group }: { group: ToneGroup }) {
                 word={word}
                 isPlaying={playingId === word.id}
                 onPlay={() => playWord(word)}
+                speakerId={speakerId}
               />
             ))}
           </div>
@@ -567,6 +573,8 @@ function PronunciationPractice() {
 // ===== 主页面 =====
 export default function DongLearn() {
   const [activeTab, setActiveTab] = useState<"intro" | "open" | "closed" | "practice">("open");
+  const [selectedSpeakerId, setSelectedSpeakerId] = useState<string>("yyj");
+  const selectedSpeaker = SPEAKERS.find(s => s.id === selectedSpeakerId) || SPEAKERS[0];
 
   const openGroups = DONG_TONE_GROUPS.filter(g => g.syllableType === "舒");
   const closedGroups = DONG_TONE_GROUPS.filter(g => g.syllableType === "促");
@@ -598,27 +606,28 @@ export default function DongLearn() {
           <div className="mt-4">
             <p className="text-xs text-white/50 mb-2 flex items-center gap-1"><Mic size={11} />切换发音人</p>
             <div className="flex flex-wrap gap-2">
-              {[
-                { id: "yyj", name: "杨艳杰", info: "40岁 · 女 · 9村 · 榕江二中", available: true },
-                { id: "sp2", name: "发音人2", info: "待上传录音", available: false },
-                { id: "sp3", name: "发音人3", info: "待上传录音", available: false },
-              ].map(sp => (
+              {SPEAKERS.map(sp => (
                 <button key={sp.id}
-                  onClick={() => sp.available && toast.info(`已切换至发音人：${sp.name}（${sp.info}）`)}
+                  onClick={() => {
+                    setSelectedSpeakerId(sp.id);
+                    toast.success(`已切换至发音人：${sp.name}（${sp.age}岁 · ${sp.gender} · ${sp.village} · ${sp.school}）`);
+                  }}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                    sp.id === "yyj"
-                      ? "bg-white/20 border-white/40 text-white"
-                      : "bg-white/5 border-white/15 text-white/40 cursor-not-allowed"
+                    sp.id === selectedSpeakerId
+                      ? "bg-white/25 border-white/60 text-white shadow-sm"
+                      : "bg-white/5 border-white/20 text-white/70 hover:bg-white/15 hover:border-white/40"
                   }`}
-                  title={sp.available ? sp.info : "录音待上传"}
+                  title={`${sp.age}岁 · ${sp.gender} · ${sp.village} · ${sp.school}`}
                 >
-                  <span className={`w-2 h-2 rounded-full ${sp.available ? "bg-green-400" : "bg-white/30"}`} />
+                  <span className={`w-2 h-2 rounded-full ${sp.id === selectedSpeakerId ? "bg-green-400" : "bg-white/40"}`} />
                   {sp.name}
-                  {!sp.available && <span className="text-white/30 text-[10px]">（待上传）</span>}
+                  {sp.id === selectedSpeakerId && <span className="text-green-300 text-[10px]">✓</span>}
                 </button>
               ))}
             </div>
-            <p className="text-xs text-white/30 mt-1.5">当前：杨艳杰 · 40岁 · 女 · 9村 · 榕江二中</p>
+            <p className="text-xs text-white/30 mt-1.5">
+              当前：{selectedSpeaker.name} · {selectedSpeaker.age}岁 · {selectedSpeaker.gender} · {selectedSpeaker.village} · {selectedSpeaker.school}
+            </p>
           </div>
         </div>
       </div>
@@ -683,7 +692,7 @@ export default function DongLearn() {
               <span className="text-sm text-dong-light">共 {openGroups.length} 个声调组 · {openGroups.reduce((s, g) => s + g.words.length, 0)} 个例词</span>
             </div>
             {openGroups.map(group => (
-              <ToneGroupCard key={`${group.toneCode}-${group.syllableType}`} group={group} />
+              <ToneGroupCard key={`${group.toneCode}-${group.syllableType}`} group={group} speakerId={selectedSpeakerId} />
             ))}
           </div>
         )}
@@ -695,7 +704,7 @@ export default function DongLearn() {
               <span className="text-sm text-dong-light">共 {closedGroups.length} 个声调组 · {closedGroups.reduce((s, g) => s + g.words.length, 0)} 个例词</span>
             </div>
             {closedGroups.map(group => (
-              <ToneGroupCard key={`${group.toneCode}-${group.syllableType}`} group={group} />
+              <ToneGroupCard key={`${group.toneCode}-${group.syllableType}`} group={group} speakerId={selectedSpeakerId} />
             ))}
           </div>
         )}

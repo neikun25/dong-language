@@ -1,11 +1,27 @@
 /**
  * 侗语声调词汇数据
- * 发音人：杨艳杰，40岁，女，9村，榕江二中
  * 数据来源：贵州榕江三宝侗寨田野调查
  *
- * 每个词汇对应独立音频文件（从田野调查录音中精确拆分）
- * 音频文件位于 /audio/ 目录下
+ * 支持多发音人切换：
+ *   - 杨艳杰（yyj）：40岁，女，9村，榕江二中
+ *   - 李通政（ltz）：50岁，男，8村，榕江二中
+ *   - 陆慧丹（lhd）：29岁，女，5村，三宝侗寨
+ *   - 粟勇康（syk）：28岁，男，4村，三宝侗寨
+ *
+ * 音频文件位于 /audio/ 目录下（杨艳杰为根目录，其他发音人在子目录中）
  */
+
+// 发音人信息
+export interface Speaker {
+  id: string;       // 发音人ID
+  name: string;     // 姓名
+  age: number;      // 年龄
+  gender: "男" | "女"; // 性别
+  village: string;  // 村落
+  school: string;   // 学校/单位
+  audioDir: string; // 音频子目录（相对于 /audio/）
+  available: boolean; // 是否有录音
+}
 
 export interface ToneWord {
   id: string;
@@ -282,6 +298,23 @@ export const DONG_TONE_GROUPS: ToneGroup[] = [
     ],
   },
 ];
+
+// 发音人列表
+export const SPEAKERS: Speaker[] = [
+  { id: "yyj", name: "杨艳杰", age: 40, gender: "女", village: "9村", school: "榕江二中", audioDir: "",    available: true },
+  { id: "ltz", name: "李通政", age: 50, gender: "男", village: "8村", school: "榕江二中", audioDir: "ltz", available: true },
+  { id: "lhd", name: "陆慧丹", age: 29, gender: "女", village: "5村", school: "三宝侗寨", audioDir: "lhd", available: true },
+  { id: "syk", name: "粟勇康", age: 28, gender: "男", village: "4村", school: "三宝侗寨", audioDir: "syk", available: true },
+];
+
+// 根据发音人ID获取音频路径
+export function getAudioPathForSpeaker(baseAudioPath: string, speakerId: string): string {
+  const speaker = SPEAKERS.find(s => s.id === speakerId);
+  if (!speaker || !speaker.available) return baseAudioPath;
+  if (!speaker.audioDir) return baseAudioPath; // 杨艳杰用默认路径
+  // 将 /audio/xxx.wav 转换为 /audio/ltz/xxx.wav
+  return baseAudioPath.replace("/audio/", `/audio/${speaker.audioDir}/`);
+}
 
 // 所有词汇的扁平列表
 export const ALL_TONE_WORDS: ToneWord[] = DONG_TONE_GROUPS.flatMap(g => g.words);

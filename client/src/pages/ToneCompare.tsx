@@ -17,6 +17,8 @@ import {
   TONE_NAMES,
   playToneWord,
   stopCurrentAudio,
+  getAudioPathForSpeaker,
+  SPEAKERS,
   type ToneWord,
   type ToneGroup,
 } from "@/lib/dongToneData";
@@ -154,6 +156,8 @@ export default function ToneCompare() {
   const [activeTab, setActiveTab] = useState<TabType>("learn");
   const [selectedGroup, setSelectedGroup] = useState<ToneLearnGroup>(learnGroups[0]);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [selectedSpeakerId, setSelectedSpeakerId] = useState<string>("yyj");
+  const selectedSpeaker = SPEAKERS.find(s => s.id === selectedSpeakerId) || SPEAKERS[0];
 
   // 测验状态
   const [quizStarted, setQuizStarted] = useState(false);
@@ -171,8 +175,9 @@ export default function ToneCompare() {
       return;
     }
     setPlayingId(id);
-    playToneWord(word.audioPath, () => setPlayingId(null));
-  }, [playingId]);
+    const audioPath = getAudioPathForSpeaker(word.audioPath, selectedSpeakerId);
+    playToneWord(audioPath, () => setPlayingId(null));
+  }, [playingId, selectedSpeakerId]);
 
   const handlePlayToneCard = useCallback((audioPath: string, id: string) => {
     if (playingId === id) {
@@ -181,8 +186,9 @@ export default function ToneCompare() {
       return;
     }
     setPlayingId(id);
-    playToneWord(audioPath, () => setPlayingId(null));
-  }, [playingId]);
+    const resolvedPath = getAudioPathForSpeaker(audioPath, selectedSpeakerId);
+    playToneWord(resolvedPath, () => setPlayingId(null));
+  }, [playingId, selectedSpeakerId]);
 
   const startQuiz = useCallback(() => {
     const questions = generateQuiz();
@@ -242,12 +248,30 @@ export default function ToneCompare() {
             <p className="text-white/80 text-base md:text-lg max-w-2xl mx-auto mb-3">
               侗语有15个声调（9舒声+6促声），通过真实录音感受每个声调的特征
             </p>
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-xs text-white/50">
-              <span className="flex items-center gap-1"><Mic size={11} />发音人：杨艳杰</span>
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-xs text-white/50 mb-3">
+              <span className="flex items-center gap-1"><Mic size={11} />当前发音人：{selectedSpeaker.name}</span>
               <span>·</span>
-              <span>40岁 · 女 · 9村 · 榕江二中</span>
+              <span>{selectedSpeaker.age}岁 · {selectedSpeaker.gender} · {selectedSpeaker.village} · {selectedSpeaker.school}</span>
               <span>·</span>
               <span>75个独立词汇录音</span>
+            </div>
+            {/* 发音人切换按鈕 */}
+            <div className="flex flex-wrap justify-center gap-2 mt-1">
+              {SPEAKERS.map(sp => (
+                <button key={sp.id}
+                  onClick={() => setSelectedSpeakerId(sp.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                    sp.id === selectedSpeakerId
+                      ? "bg-white/25 border-white/60 text-white"
+                      : "bg-white/5 border-white/20 text-white/60 hover:bg-white/15"
+                  }`}
+                  title={`${sp.age}岁 · ${sp.gender} · ${sp.village} · ${sp.school}`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${sp.id === selectedSpeakerId ? "bg-green-400" : "bg-white/30"}`} />
+                  {sp.name}
+                  {sp.id === selectedSpeakerId && <span className="text-green-300">✓</span>}
+                </button>
+              ))}
             </div>
           </motion.div>
         </div>
