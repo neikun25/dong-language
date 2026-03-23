@@ -15,16 +15,15 @@ export default function Footer() {
           </p>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <div className="w-20 h-20 bg-white/10 rounded-md flex items-center justify-center border border-white/20">
-            <svg viewBox="0 0 60 60" className="w-14 h-14 text-white/40">
-              <rect x="5" y="5" width="20" height="20" rx="2" fill="currentColor" />
-              <rect x="35" y="5" width="20" height="20" rx="2" fill="currentColor" />
-              <rect x="5" y="35" width="20" height="20" rx="2" fill="currentColor" />
-              <rect x="35" y="35" width="12" height="12" rx="1" fill="currentColor" />
-              <rect x="43" y="43" width="12" height="12" rx="1" fill="currentColor" />
-            </svg>
+          <div className="w-24 h-24 bg-white rounded-lg overflow-hidden border-2 border-white/30 shadow-lg">
+            <img
+              src={`${import.meta.env.BASE_URL}wechat-qr.jpg`}
+              alt="DongScape侗音绘语公众号二维码"
+              className="w-full h-full object-cover"
+            />
           </div>
-          <span className="text-xs text-white/50">扫码关注我们</span>
+          <span className="text-xs text-white/70 font-medium">扫码关注公众号</span>
+          <span className="text-[10px] text-white/40">DongScape侗音绘语</span>
         </div>
       </div>
       <div className="max-w-[1200px] mx-auto mt-6 pt-4 border-t border-white/10 text-center">

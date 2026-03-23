@@ -4,12 +4,13 @@
  * 功能：声调分组词汇对比学习、声调曲线对比、真实录音播放、听辨测验
  * 所有词汇均来自终版调查字表（发音人：杨艳杰，榕江二中）
  */
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Volume2, Trophy, BookOpen, Headphones, ChevronRight, RotateCcw, CheckCircle, XCircle, Lightbulb, Music, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AiToneDetect from "@/components/AiToneDetect";
 import {
   DONG_TONE_GROUPS,
   TONE_COLORS,
@@ -147,7 +148,7 @@ function WordCard({ word, isPlaying, onPlay, color }: { word: ToneWord; isPlayin
 }
 
 // ========== 页面组件 ==========
-type TabType = "learn" | "tones" | "quiz";
+type TabType = "learn" | "tones" | "quiz" | "ai-detect";
 
 export default function ToneCompare() {
   const [activeTab, setActiveTab] = useState<TabType>("learn");
@@ -218,6 +219,7 @@ export default function ToneCompare() {
     { id: "learn", label: "声调学习", icon: <BookOpen className="w-4 h-4" /> },
     { id: "tones", label: "声调总览", icon: <Music className="w-4 h-4" /> },
     { id: "quiz", label: "听辨测验", icon: <Headphones className="w-4 h-4" /> },
+    { id: "ai-detect", label: "AI检测", icon: <Mic className="w-4 h-4" /> },
   ];
 
   return (
@@ -785,6 +787,13 @@ export default function ToneCompare() {
               </div>
             </motion.div>
           )}
+          {/* ========== AI检测 ========== */}
+          {activeTab === "ai-detect" && (
+            <motion.div key="ai-detect" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+              <AiToneDetect />
+            </motion.div>
+          )}
+
         </AnimatePresence>
       </main>
 

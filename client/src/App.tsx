@@ -14,6 +14,9 @@ import DongLearn from "./pages/DongLearn";
 import MandarinLearn from "./pages/MandarinLearn";
 import ToneCompare from "./pages/ToneCompare";
 import FieldData from "./pages/FieldData";
+import Profile from "./pages/Profile";
+import AiAssistant from "./pages/AiAssistant";
+import AiFloatButton from "./components/AiFloatButton";
 
 // 页面切换时自动滚动到顶部
 function ScrollToTop() {
@@ -38,6 +41,8 @@ function Router() {
         <Route path="/mandarin-learn" component={MandarinLearn} />
         <Route path="/tone-compare" component={ToneCompare} />
         <Route path="/field-data" component={FieldData} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/ai-assistant" component={AiAssistant} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
@@ -57,6 +62,7 @@ function App() {
           <Toaster />
           <WouterRouter base={BASE_PATH}>
             <Router />
+            <AiFloatButton />
           </WouterRouter>
         </TooltipProvider>
       </ThemeProvider>

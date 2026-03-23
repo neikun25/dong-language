@@ -592,11 +592,33 @@ export default function DongLearn() {
             按声调分类系统学习侗语词汇，配有田野调查真实录音与互动发音练习
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-xs text-white/50">
-            <span className="flex items-center gap-1"><Mic size={11} />发音人：杨艳杰</span>
-            <span>·</span>
-            <span>40岁 · 女 · 9村 · 榕江二中</span>
-            <span>·</span>
             <span className="flex items-center gap-1"><Volume2 size={11} />{totalWords} 个独立词汇录音</span>
+          </div>
+          {/* 发音人切换 */}
+          <div className="mt-4">
+            <p className="text-xs text-white/50 mb-2 flex items-center gap-1"><Mic size={11} />切换发音人</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: "yyj", name: "杨艳杰", info: "40岁 · 女 · 9村 · 榕江二中", available: true },
+                { id: "sp2", name: "发音人2", info: "待上传录音", available: false },
+                { id: "sp3", name: "发音人3", info: "待上传录音", available: false },
+              ].map(sp => (
+                <button key={sp.id}
+                  onClick={() => sp.available && toast.info(`已切换至发音人：${sp.name}（${sp.info}）`)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    sp.id === "yyj"
+                      ? "bg-white/20 border-white/40 text-white"
+                      : "bg-white/5 border-white/15 text-white/40 cursor-not-allowed"
+                  }`}
+                  title={sp.available ? sp.info : "录音待上传"}
+                >
+                  <span className={`w-2 h-2 rounded-full ${sp.available ? "bg-green-400" : "bg-white/30"}`} />
+                  {sp.name}
+                  {!sp.available && <span className="text-white/30 text-[10px]">（待上传）</span>}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-white/30 mt-1.5">当前：杨艳杰 · 40岁 · 女 · 9村 · 榕江二中</p>
           </div>
         </div>
       </div>

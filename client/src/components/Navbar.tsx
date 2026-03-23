@@ -7,7 +7,7 @@
  */
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Search, Menu, X, Volume2 } from "lucide-react";
+import { Search, Menu, X, Volume2, UserCircle2 } from "lucide-react";
 import { searchWords, speakText, speakDong, type DongWord } from "@/lib/dongData";
 import { ToneBadge } from "@/components/ToneCurve";
 
@@ -107,8 +107,8 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Search */}
-        <div className="flex-1 flex justify-end" ref={searchRef}>
+        {/* Search + Avatar */}
+        <div className="flex-1 flex justify-end items-center gap-2" ref={searchRef}>
           <div className="relative">
             <input
               type="text"
@@ -178,6 +178,16 @@ export default function Navbar() {
               </div>
             )}
           </div>
+          {/* 个人中心头像图标（B站风格）*/}
+          <Link href="/profile" className="flex-shrink-0 group" title="个人中心">
+            <div className={`w-8 h-8 rounded-full overflow-hidden border-2 transition-all ${
+              location === '/profile'
+                ? 'border-dong-rose shadow-md shadow-dong-rose/30'
+                : 'border-white/30 group-hover:border-dong-rose/70'
+            } bg-dong-rose/10 flex items-center justify-center`}>
+              <UserCircle2 className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" />
+            </div>
+          </Link>
         </div>
       </div>
 
