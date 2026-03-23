@@ -518,7 +518,7 @@ export default function Culture() {
                     preload="metadata"
                     onPlay={() => setVideoPlaying(true)}
                     onPause={() => setVideoPlaying(false)}
-                    src="/pipa-song.mp4"
+                    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/pipa-song.mp4`}
                   >
                     您的浏览器不支持视频播放。
                   </video>

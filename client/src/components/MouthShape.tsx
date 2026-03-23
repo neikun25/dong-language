@@ -193,10 +193,10 @@ export default function MouthShape({ dongPinyin, dong, size = "md", className = 
     <div className={`inline-flex flex-col items-center ${className}`}>
       {/* 口型动画区域 */}
       <button
-        onClick={playAnimation}
+        onClick={phonemes.length === 0 ? undefined : playAnimation}
         disabled={isPlaying}
-        className="relative group cursor-pointer"
-        title="点击播放口型动画"
+        className={`relative group ${phonemes.length === 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+        title={phonemes.length === 0 ? '请先选择词汇' : '点击播放口型动画'}
       >
         <svg width={dim.w} height={dim.h} viewBox={`0 0 ${dim.w} ${dim.h}`}>
           {/* 脸部轮廓 */}
@@ -282,11 +282,16 @@ export default function MouthShape({ dongPinyin, dong, size = "md", className = 
         </svg>
         
         {/* 播放提示 */}
-        {!isPlaying && (
+        {!isPlaying && phonemes.length > 0 && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/10 rounded-full transition-colors">
             <span className="text-transparent group-hover:text-dong-indigo text-[10px] font-medium transition-colors">
               ▶ 口型
             </span>
+          </div>
+        )}
+        {!isPlaying && phonemes.length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-dong-light/50 text-[9px]">—</span>
           </div>
         )}
       </button>
