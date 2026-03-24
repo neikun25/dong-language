@@ -75,7 +75,7 @@ export default function AiFloatButton() {
         onClick={() => navigate("/ai-assistant")}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="w-14 h-14 rounded-full border-2 border-white overflow-hidden transition-transform hover:scale-110 active:scale-95"
+        className="w-20 h-20 rounded-full border-[3px] border-white overflow-hidden transition-transform hover:scale-110 active:scale-95"
         style={{
           boxShadow: "0 4px 20px rgba(58,58,110,0.35)",
           background: "white",
