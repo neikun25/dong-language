@@ -42,17 +42,20 @@ export default function AiAssistant() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const isFirstRender = useRef(true);
 
-  // 只在新消息发送后才滚动到底部，初始加载不触发
+  // 只在新消息发送后才滚动聊天容器到底部，不影响页面滚动
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+    }
   }, [messages]);
 
   const sendMessage = async (text: string) => {
@@ -161,7 +164,7 @@ export default function AiAssistant() {
         {/* 聊天区域 */}
         <div className="rounded-2xl border bg-white shadow-sm overflow-hidden" style={{ borderColor: "rgba(58,58,110,0.12)" }}>
           {/* 消息列表 */}
-          <div className="h-[420px] overflow-y-auto p-4 space-y-4">
+          <div ref={messagesContainerRef} className="h-[420px] overflow-y-auto p-4 space-y-4">
             <AnimatePresence initial={false}>
               {messages.map(msg => (
                 <motion.div key={msg.id}
@@ -201,7 +204,6 @@ export default function AiAssistant() {
                 </div>
               </motion.div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* 输入区域 */}
