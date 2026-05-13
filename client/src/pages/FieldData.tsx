@@ -170,18 +170,22 @@ function ToneGroupCard({ group }: { group: ToneGroup }) {
   );
 }
 
-export default function FieldData() {
+interface FieldDataProps {
+  embedded?: boolean;
+}
+
+export default function FieldData({ embedded = false }: FieldDataProps = {}) {
   const [activeTab, setActiveTab] = useState<"overview" | "tones" | "phonology" | "open" | "closed">("overview");
   const openGroups = FIELD_TONE_GROUPS.filter(g => g.syllableType === "舒");
   const closedGroups = FIELD_TONE_GROUPS.filter(g => g.syllableType === "促");
   const totalWords = FIELD_TONE_GROUPS.reduce((s, g) => s + g.words.length, 0);
 
   return (
-    <div className="min-h-screen bg-[#f8f6f2] flex flex-col">
-      <Navbar />
+    <div className={embedded ? "bg-[#f8f6f2]" : "min-h-screen bg-[#f8f6f2] flex flex-col"}>
+      {!embedded && <Navbar />}
 
       {/* 页面标题 */}
-      <div className="bg-gradient-to-br from-[#3a3a6e] to-[#5a4a7e] text-white py-12">
+      {!embedded && <div className="bg-gradient-to-br from-[#3a3a6e] to-[#5a4a7e] text-white py-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center gap-3 mb-3">
             <Globe size={28} className="text-[#e8c4c0]" />
@@ -198,10 +202,10 @@ export default function FieldData() {
             <span className="flex items-center gap-1"><Volume2 size={13} />{totalWords} 个独立词汇录音</span>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* 标签栏 */}
-      <div className="bg-white border-b border-[#e8e0d5] sticky top-16 z-10">
+      <div className={embedded ? "bg-white border-b border-[#e8e0d5] rounded-t-2xl" : "bg-white border-b border-[#e8e0d5] sticky top-16 z-10"}>
         <div className="max-w-6xl mx-auto px-4 flex gap-0 overflow-x-auto">
           {[
             { key: "overview", label: "语言概况", icon: <Globe size={14} /> },
@@ -222,7 +226,7 @@ export default function FieldData() {
         </div>
       </div>
 
-      <main className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
+      <main className={embedded ? "px-0 py-6 w-full" : "flex-1 max-w-6xl mx-auto px-4 py-8 w-full"}>
 
         {/* 语言概况 */}
         {activeTab === "overview" && (
@@ -549,7 +553,7 @@ export default function FieldData() {
         )}
 
       </main>
-      <Footer />
+      {!embedded && <Footer />}
     </div>
   );
 }

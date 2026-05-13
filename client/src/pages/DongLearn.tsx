@@ -5,6 +5,7 @@
  * 发音练习：录音评分，纠正侗语发音
  */
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useLocation } from "wouter";
 import { Volume2, Play, Pause, ChevronDown, ChevronUp, Mic, Music, BookOpen, Info, Square, RotateCcw, AlertCircle, CheckCircle, BarChart3 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Carousel from "@/components/Carousel";
@@ -26,6 +27,8 @@ import {
 import { dongDictionary, speakText, speakDong, speakDongByChinese, searchWords } from "@/lib/dongData";
 import ToneCurve, { ToneBadge } from "@/components/ToneCurve";
 import MouthShape from "@/components/MouthShape";
+import ToneCompare from "./ToneCompare";
+import FieldData from "./FieldData";
 
 // ===== 声调曲线SVG（小型，用于卡片标题） =====
 function MiniToneCurve({ contour, color }: { contour: number[]; color: string }) {
@@ -572,7 +575,13 @@ function PronunciationPractice() {
 
 // ===== 主页面 =====
 export default function DongLearn() {
-  const [activeTab, setActiveTab] = useState<"intro" | "open" | "closed" | "practice">("open");
+  const [location] = useLocation();
+  const [activeTab, setActiveTab] = useState<"intro" | "open" | "closed" | "practice" | "tone-practice" | "phonology">(() => {
+    if (location === "/tone-compare") return "tone-practice";
+    if (location === "/field-data") return "phonology";
+    if (location === "/pronunciation") return "practice";
+    return "open";
+  });
   const [selectedSpeakerId, setSelectedSpeakerId] = useState<string>("yyj");
   const selectedSpeaker = SPEAKERS.find(s => s.id === selectedSpeakerId) || SPEAKERS[0];
 
@@ -597,7 +606,7 @@ export default function DongLearn() {
             <h1 className="text-2xl font-serif font-bold">侗语学习</h1>
           </div>
           <p className="text-white/70 text-sm max-w-xl">
-            按声调分类系统学习侗语词汇，配有田野调查真实录音与互动发音练习
+            集成侗语词汇、声调练习、侗语音系与互动发音训练，配有田野调查真实录音
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-xs text-white/50">
             <span className="flex items-center gap-1"><Volume2 size={11} />{totalWords} 个独立词汇录音</span>
@@ -639,6 +648,8 @@ export default function DongLearn() {
             { key: "intro", label: "声调介绍", icon: <Info size={14} /> },
             { key: "open", label: `舒声调（${openGroups.length}组）`, icon: <Music size={14} /> },
             { key: "closed", label: `促声调（${closedGroups.length}组）`, icon: <Music size={14} /> },
+            { key: "tone-practice", label: "声调练习", icon: <BarChart3 size={14} /> },
+            { key: "phonology", label: "侗语音系", icon: <BookOpen size={14} /> },
             { key: "practice", label: "发音练习", icon: <Mic size={14} /> },
           ].map(tab => (
             <button
@@ -711,6 +722,12 @@ export default function DongLearn() {
 
         {/* 发音练习 */}
         {activeTab === "practice" && <PronunciationPractice />}
+
+        {/* 声调练习 */}
+        {activeTab === "tone-practice" && <ToneCompare embedded />}
+
+        {/* 侗语音系 */}
+        {activeTab === "phonology" && <FieldData embedded />}
 
       </main>
 

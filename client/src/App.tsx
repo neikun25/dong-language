@@ -6,14 +6,11 @@ import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import Pronunciation from "./pages/Pronunciation";
 import MandarinPronunciation from "./pages/MandarinPronunciation";
 import Message from "./pages/Message";
 import Culture from "./pages/Culture";
 import DongLearn from "./pages/DongLearn";
 import MandarinLearn from "./pages/MandarinLearn";
-import ToneCompare from "./pages/ToneCompare";
-import FieldData from "./pages/FieldData";
 import Profile from "./pages/Profile";
 import AiAssistant from "./pages/AiAssistant";
 import AiFloatButton from "./components/AiFloatButton";
@@ -33,14 +30,14 @@ function Router() {
       <ScrollToTop />
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/pronunciation" component={Pronunciation} />
+        <Route path="/pronunciation" component={DongLearn} />
         <Route path="/mandarin-pronunciation" component={MandarinPronunciation} />
         <Route path="/message" component={Message} />
         <Route path="/culture" component={Culture} />
         <Route path="/dong-learn" component={DongLearn} />
         <Route path="/mandarin-learn" component={MandarinLearn} />
-        <Route path="/tone-compare" component={ToneCompare} />
-        <Route path="/field-data" component={FieldData} />
+        <Route path="/tone-compare" component={DongLearn} />
+        <Route path="/field-data" component={DongLearn} />
         <Route path="/profile" component={Profile} />
         <Route path="/ai-assistant" component={AiAssistant} />
         <Route path="/404" component={NotFound} />

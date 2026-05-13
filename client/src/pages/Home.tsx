@@ -41,8 +41,8 @@ export default function Home() {
   const quickEntries = [
     { icon: BookOpen, label: "侗语学习", desc: "系统学习侗语词汇", path: "/dong-learn", color: "bg-blue-50 text-blue-600 border-blue-100" },
     { icon: Globe, label: "普通话学习", desc: "提升普通话水平", path: "/mandarin-learn", color: "bg-green-50 text-green-600 border-green-100" },
-    { icon: Mic, label: "发音纠音", desc: "AI评分纠正发音", path: "/pronunciation", color: "bg-purple-50 text-purple-600 border-purple-100" },
-    { icon: Music, label: "声调练习", desc: "对比学习侗语声调", path: "/tone-compare", color: "bg-indigo-50 text-indigo-600 border-indigo-100" },
+    { icon: Mic, label: "发音纠音", desc: "AI评分纠正发音", path: "/dong-learn", color: "bg-purple-50 text-purple-600 border-purple-100" },
+    { icon: Music, label: "声调练习", desc: "对比学习侗语声调", path: "/dong-learn", color: "bg-indigo-50 text-indigo-600 border-indigo-100" },
     { icon: Star, label: "侗族文化", desc: "探索侗族文化瑰宝", path: "/culture", color: "bg-amber-50 text-amber-600 border-amber-100" },
     { icon: MessageSquare, label: "留言交流", desc: "分享学习心得", path: "/message", color: "bg-rose-50 text-rose-600 border-rose-100" },
   ];
@@ -259,7 +259,7 @@ export default function Home() {
                 <li>清浊辅音区分不够明显</li>
                 <li>入声字的喉塞尾容易丢失</li>
               </ol>
-              <Link href="/pronunciation" className="inline-block mt-4 text-xs text-dong-rose hover:text-dong-indigo transition-colors">
+              <Link href="/dong-learn" className="inline-block mt-4 text-xs text-dong-rose hover:text-dong-indigo transition-colors">
                 前往侗语纠音练习 →
               </Link>
             </div>

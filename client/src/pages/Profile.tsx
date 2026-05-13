@@ -357,7 +357,7 @@ export default function Profile() {
                   <h3 className="font-bold text-dong-indigo text-sm">继续侗语学习</h3>
                   <p className="text-xs text-dong-light mt-1">系统学习侗语词汇和课程</p>
                 </Link>
-                <Link href="/tone-compare" className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm hover:shadow-md transition-all block">
+                <Link href="/dong-learn" className="bg-white rounded-xl p-5 border border-dong-indigo/10 shadow-sm hover:shadow-md transition-all block">
                   <Star className="w-6 h-6 text-dong-rose mb-2" />
                   <h3 className="font-bold text-dong-indigo text-sm">声调练习</h3>
                   <p className="text-xs text-dong-light mt-1">AI检测声调，精准纠音</p>
