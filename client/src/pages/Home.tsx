@@ -17,6 +17,8 @@ import { ALL_TONE_WORDS } from "@/lib/dongToneData";
 
 // 热门搜索词汇（取字表前12个词）
 const HOT_SEARCH_WORDS = ALL_TONE_WORDS.slice(0, 9).map(w => w.chinese);
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const asset = (path: string) => `${BASE}${path}`;
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
@@ -104,7 +106,7 @@ export default function Home() {
             <div className="lg:w-[280px] flex-shrink-0">
               <div className="rounded-lg overflow-hidden shadow-md border border-dong-indigo/10">
                 <img
-                  src="https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/dong-culture-hero-bXVLgdU2pfKceyYv2mwSed.webp"
+                  src={asset("/translation-dong-costume.png")}
                   alt="侗语介绍"
                   className="w-full h-auto object-cover"
                 />
