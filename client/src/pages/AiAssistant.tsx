@@ -21,7 +21,7 @@ const QUICK_PROMPTS = [
   { label: "发音难点解析", icon: <Sparkles className="w-4 h-4" />, prompt: "侗语中哪些声调对普通话母语者来说最难掌握？有什么专项练习方法？" },
 ];
 
-const SYSTEM_PROMPT = `你是"侗音绘语"侗族语言学习平台的AI助手，名叫"侗侗"。你专注于帮助用户学习侗语（南部侗语，贵州榕江方言），具备以下专业知识：
+const SYSTEM_PROMPT = `你是"侗音绘语"侗族语言学习平台的AI助手，名叫"咚咚"。你专注于帮助用户学习侗语（南部侗语，贵州榕江方言），具备以下专业知识：
 1. 侗语语音系统：15个声调（9舒声调+6促声调），声调编码如55、35、11、323、13、31、53、453、33等
 2. 侗语基本词汇：包含字表75个核心词汇
 3. 侗族文化：侗族大歌、琵琶歌、民间故事、传统习俗
@@ -37,7 +37,7 @@ export default function AiAssistant() {
     {
       id: "welcome",
       role: "assistant",
-      content: "你好！我是侗侗，你的侗语学习助手。我可以帮你制定学习计划、解答声调疑问、介绍侗族文化。有什么我可以帮你的吗？"
+      content: "你好！我是咚咚，你的侗语学习助手。我可以帮你制定学习计划、解答声调疑问、介绍侗族文化。有什么我可以帮你的吗？"
     }
   ]);
   const [input, setInput] = useState("");
@@ -119,7 +119,7 @@ export default function AiAssistant() {
     setMessages([{
       id: "welcome",
       role: "assistant",
-      content: "你好！我是侗侗，你的侗语学习助手。我可以帮你制定学习计划、解答声调疑问、介绍侗族文化。有什么我可以帮你的吗？"
+      content: "你好！我是咚咚，你的侗语学习助手。我可以帮你制定学习计划、解答声调疑问、介绍侗族文化。有什么我可以帮你的吗？"
     }]);
   };
 
@@ -134,12 +134,12 @@ export default function AiAssistant() {
             <div className="flex items-center justify-center gap-4 mb-3">
               <img
                 src={asset("/ip-yes.png")}
-                alt="侗侗"
+                alt="咚咚"
                 className="w-16 h-16 rounded-full object-cover border-2 border-white/30"
               />
               <div className="text-left">
                 <h1 className="text-2xl md:text-3xl font-bold text-white" style={{ fontFamily: "'Noto Serif SC', serif" }}>
-                  AI学习助手·侗侗
+                  AI学习助手·咚咚
                 </h1>
                 <p className="text-white/70 text-sm">你的专属侗语学习伙伴</p>
               </div>
@@ -172,7 +172,7 @@ export default function AiAssistant() {
                   className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
                   {/* 头像 */}
                   {msg.role === "assistant" ? (
-                    <img src={asset("/ip-happy.png")} alt="侗侗" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                    <img src={asset("/ip-happy.png")} alt="咚咚" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold"
                       style={{ backgroundColor: "#3a3a6e" }}>我</div>
@@ -194,7 +194,7 @@ export default function AiAssistant() {
             </AnimatePresence>
             {loading && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-                <img src={asset("/ip-working.png")} alt="侗侗" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                <img src={asset("/ip-working.png")} alt="咚咚" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                 <div className="rounded-2xl rounded-tl-sm px-4 py-3 border" style={{ backgroundColor: "rgba(58,58,110,0.04)", borderColor: "rgba(58,58,110,0.1)" }}>
                   <div className="flex gap-1 items-center h-5">
                     {[0, 1, 2].map(i => (
@@ -232,7 +232,7 @@ export default function AiAssistant() {
         </div>
 
         <p className="text-xs text-center mt-3" style={{ color: "rgba(58,58,110,0.4)" }}>
-          侗侗基于AI技术，回答仅供学习参考。如需专业语言学指导，请咨询专业教师。
+          咚咚基于AI技术，回答仅供学习参考。如需专业语言学指导，请咨询专业教师。
         </p>
       </main>
 

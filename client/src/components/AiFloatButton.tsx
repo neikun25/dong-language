@@ -72,7 +72,7 @@ export default function AiFloatButton() {
             animation: "fadeInUp 0.2s ease-out",
           }}
         >
-          AI学习助手·侗侗
+          AI学习助手·咚咚
         </div>
       )}
 
@@ -85,7 +85,7 @@ export default function AiFloatButton() {
           background: "white",
           transform: hovered ? "translateX(-12px) scale(1.06)" : "translateX(0) scale(1)",
         }}
-        title="AI学习助手·侗侗"
+        title="AI学习助手·咚咚"
       >
         {imageFailed ? (
           <span className="w-full h-full flex items-center justify-center bg-dong-indigo text-white">
@@ -94,7 +94,7 @@ export default function AiFloatButton() {
         ) : (
           <img
             src={currentFrame.src}
-            alt="AI助手·侗侗"
+            alt="AI助手·咚咚"
             className="w-full h-full object-cover"
             onError={() => setImageFailed(true)}
             style={{

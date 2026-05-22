@@ -5,8 +5,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+const asset = (path: string) => `${BASE}${path}`;
+
 const bannerImages = [
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/banner1-EELMC4QXVm9cuMSuKPUczR.webp",
+  asset("/banner-dong-costume.png"),
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/banner2-ZSoUzvjk4MNoxQybZ9MiMJ.webp",
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/banner3-CwPZViqTsaCWdQTZPo7Eeh.webp",
 ];
