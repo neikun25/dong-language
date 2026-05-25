@@ -399,7 +399,7 @@ export default function Culture() {
             <>
               <div className="mb-8 rounded-xl overflow-hidden shadow-lg border border-dong-indigo/10">
                 <img
-                  src="https://d2xsxph8kpxj0f.cloudfront.net/310519663064893205/SY2i5NaAzwi6E5fT3x7KZc/dong-culture-hero-bXVLgdU2pfKceyYv2mwSed.webp"
+                  src={`${import.meta.env.BASE_URL}culture-cave-hero.jpg`}
                   alt="侗族文化"
                   className="w-full h-auto max-h-[400px] object-cover"
                 />
