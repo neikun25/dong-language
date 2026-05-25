@@ -49,6 +49,34 @@ export default function Home() {
     { icon: MessageSquare, label: "留言交流", desc: "分享学习心得", path: "/message", color: "bg-rose-50 text-rose-600 border-rose-100" },
   ];
 
+  const toneRecommendations = [
+    {
+      title: "声调入门",
+      description: "先认识9个舒声调和6个促声调的基本差异",
+      level: "入门",
+    },
+    {
+      title: "声调听辨",
+      description: "对照真实录音，先培养听觉敏感度",
+      level: "基础",
+    },
+    {
+      title: "声调对比",
+      description: "在不同调型连续比较中找到关键区别",
+      level: "进阶",
+    },
+    {
+      title: "AI声调检测",
+      description: "录音后对照风险调型，看清学习效果",
+      level: "能力",
+    },
+    {
+      title: "声调综合训练",
+      description: "把听、说、测结合起来，完成整体提升",
+      level: "提升",
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-dong-paper">
       <Navbar />
@@ -106,7 +134,7 @@ export default function Home() {
             <div className="lg:w-[280px] flex-shrink-0">
               <div className="rounded-lg overflow-hidden shadow-md border border-dong-indigo/10">
                 <img
-                  src={asset("/translation-dong-costume.png")}
+                  src={asset("/translation-dong-pipa.jpg")}
                   alt="侗语介绍"
                   className="w-full h-auto object-cover"
                 />
@@ -214,29 +242,23 @@ export default function Home() {
         <div className="max-w-[1100px] mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-serif text-dong-indigo font-bold">推荐课程</h2>
-            <Link href="/dong-learn" className="text-sm text-dong-rose hover:text-dong-indigo flex items-center gap-1 transition-colors">
+            <Link href="/tone-compare" className="text-sm text-dong-rose hover:text-dong-indigo flex items-center gap-1 transition-colors">
               全部课程 <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {dongLessons.slice(0, 5).map((lesson) => {
-              const isCompleted = false;
+            {toneRecommendations.map((course) => {
               return (
-                <Link key={lesson.id} href="/dong-learn">
+                <Link key={course.title} href="/tone-compare">
                   <div className="bg-white rounded-xl p-4 border border-dong-indigo/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all h-full">
                     <div className="flex items-center justify-between mb-2">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                        lesson.difficulty === 1 ? "bg-green-50 text-green-600" :
-                        lesson.difficulty === 2 ? "bg-yellow-50 text-yellow-600" :
-                        "bg-red-50 text-red-600"
-                      }`}>
-                        {lesson.difficulty === 1 ? "初级" : lesson.difficulty === 2 ? "中级" : "高级"}
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">
+                        声调课程
                       </span>
-                      {isCompleted && <span className="text-[10px] text-green-600">已完成</span>}
                     </div>
-                    <h3 className="font-bold text-dong-indigo text-sm mb-1">{lesson.title}</h3>
-                    <p className="text-xs text-dong-light line-clamp-2">{lesson.description}</p>
-                    <p className="text-[10px] text-dong-light mt-2">{lesson.wordIds.length} 个词汇</p>
+                    <h3 className="font-bold text-dong-indigo text-sm mb-1">{course.title}</h3>
+                    <p className="text-xs text-dong-light line-clamp-2">{course.description}</p>
+                    <p className="text-[10px] text-dong-light mt-2">{course.level}</p>
                   </div>
                 </Link>
               );

@@ -47,6 +47,19 @@ const cultureCategories = [
 // ===== 民间故事数据 =====
 const folkStories = [
   {
+    id: "s0",
+    title: "珠郎娘美",
+    category: "爱情传说",
+    summary: "侗族最经典的爱情传说之一，讲述珠郎与娘美冲破阻隔、追寻真爱的故事。",
+    content: `珠郎娘美是侗族民间流传最广、影响最深的爱情传说之一，几乎在每一片侗寨歌场里都能听到它的回响。
+
+故事讲述珠郎和娘美青梅竹马、彼此倾心，却因为门第、婚约与家族阻隔，迟迟不能成婚。两人不向命运低头，约定以歌传情、以心相守，在层层阻碍中坚持彼此的感情。
+
+后来的版本中，珠郎与娘美经历了追赶、离散、重逢与反抗，最终让人们看到侗族民间文学中对于自由爱情的向往，也体现出侗家人重情重义、敢爱敢恨的精神气质。
+
+在侗族地区，珠郎娘美不仅是一则爱情故事，也常常被唱进歌班、讲进月堂，成为侗族文化中极具代表性的经典母题。`,
+  },
+  {
     id: "s1",
     title: "找歌的传说",
     category: "神话传说",
@@ -417,7 +430,7 @@ export default function Culture() {
                   <div className="bg-dong-cream/40 rounded-xl p-4 border border-dong-indigo/10 mb-6">
                     <p className="text-sm text-dong-light leading-relaxed">
                       以下故事选自《侗族民间故事选》（杨通山等编），涵盖神话传说、爱情故事、神奇故事和动物故事等类型，
-                      是侗族口耳相传的珍贵文化遗产。
+                      其中最经典的《珠郎娘美》也已收录，是侗族口耳相传的珍贵文化遗产。
                     </p>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
