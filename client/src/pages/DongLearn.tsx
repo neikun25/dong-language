@@ -6,7 +6,7 @@
  */
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
-import { Volume2, Play, Pause, ChevronDown, ChevronUp, Mic, Music, BookOpen, Info, Square, RotateCcw, AlertCircle, CheckCircle, BarChart3 } from "lucide-react";
+import { Volume2, Play, Pause, ChevronDown, ChevronUp, Mic, Music, BookOpen, Info, Square, RotateCcw, AlertCircle, CheckCircle, BarChart3, ExternalLink, MapPin, UserPlus, FileText } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Carousel from "@/components/Carousel";
 import Footer from "@/components/Footer";
@@ -547,25 +547,41 @@ function PronunciationPractice() {
 
       {/* 发音指南 */}
       <div className="bg-white rounded-xl p-6 border border-dong-indigo/10 shadow-sm">
-        <h3 className="text-dong-indigo font-serif font-bold mb-4">侗语发音指南</h3>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <h4 className="text-sm font-bold text-dong-rose mb-2">声调系统</h4>
-            <ul className="text-sm text-foreground/75 space-y-1.5">
-              <li>• <strong>高平调(55)</strong>：声调高而平稳</li>
-              <li>• <strong>中升调(35)</strong>：从中音升到高音</li>
-              <li>• <strong>低调(11)</strong>：低而平稳</li>
-              <li>• <strong>促声</strong>：短促有力，带塞音韵尾</li>
-            </ul>
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-dong-rose">外部资源</p>
+              <h3 className="mt-1 text-dong-indigo font-serif font-bold text-lg">侗语语音资料查询入口</h3>
+            </div>
+            <p className="text-sm text-foreground/75 leading-relaxed">
+              可前往“中国语言资源保护工程采录展示平台”查看榕江侗语相关语音、词汇与方言点资料。
+            </p>
           </div>
-          <div>
-            <h4 className="text-sm font-bold text-dong-rose mb-2">辅音特点</h4>
-            <ul className="text-sm text-foreground/75 space-y-1.5">
-              <li>• <strong>清浊对立</strong>：b/p, d/t, g/k 要区分</li>
-              <li>• <strong>鼻音</strong>：m-, n-, ny-, ng- 开头</li>
-              <li>• <strong>韵尾</strong>：-m, -n, -ng, -p, -t, -k</li>
-              <li>• <strong>复辅音</strong>：bl-, gl-, kl- 等组合</li>
-            </ul>
+          <a
+            href="https://zhongguoyuyan.cn/index"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-dong-indigo px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-dong-indigo/90"
+          >
+            打开查询平台
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <div className="rounded-lg border border-dong-indigo/10 bg-dong-paper/50 p-4">
+            <UserPlus className="mb-3 h-5 w-5 text-dong-rose" />
+            <h4 className="text-sm font-bold text-dong-indigo">1. 注册登录</h4>
+            <p className="mt-1 text-sm text-foreground/70">进入平台后按提示完成账号注册并登录。</p>
+          </div>
+          <div className="rounded-lg border border-dong-indigo/10 bg-dong-paper/50 p-4">
+            <MapPin className="mb-3 h-5 w-5 text-dong-rose" />
+            <h4 className="text-sm font-bold text-dong-indigo">2. 选择地区</h4>
+            <p className="mt-1 text-sm text-foreground/70">在地图上选择贵州省黔东南民族自治州榕江县。</p>
+          </div>
+          <div className="rounded-lg border border-dong-indigo/10 bg-dong-paper/50 p-4">
+            <FileText className="mb-3 h-5 w-5 text-dong-rose" />
+            <h4 className="text-sm font-bold text-dong-indigo">3. 查看详情</h4>
+            <p className="mt-1 text-sm text-foreground/70">进入详情页查看对应方言点的语音与资料内容。</p>
           </div>
         </div>
       </div>
